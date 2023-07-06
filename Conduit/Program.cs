@@ -1,4 +1,4 @@
-using Conduit.Domain;
+using Conduit.Features.User.Domain;
 using Conduit.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;

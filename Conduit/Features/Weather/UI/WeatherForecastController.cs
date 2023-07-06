@@ -1,9 +1,9 @@
-using Conduit.Domain;
+using Conduit.Features.Weather.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
 
-namespace Conduit.Features.Controllers
+namespace Conduit.Features.Weather.UI
 {
     [Authorize]
     [ApiController]

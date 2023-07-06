@@ -1,4 +1,4 @@
-namespace Conduit.Domain
+namespace Conduit.Features.Weather.Domain
 {
     public class WeatherForecast
     {

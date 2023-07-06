@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Auth\**" />
+    <Content Remove="Features\Auth\**" />
+    <EmbeddedResource Remove="Features\Auth\**" />
+    <None Remove="Features\Auth\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="IdentityServer4.EntityFramework.Storage" Version="4.1.2" />
     <PackageReference Include="MediatR" Version="12.0.1" />
@@ -27,6 +34,12 @@
     <PackageReference Include="Microsoft.Identity.Web" Version="1.16.0" />
     <PackageReference Include="Serilog" Version="3.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\User\Application\" />
+    <Folder Include="Features\User\UI\" />
+    <Folder Include="Features\Weather\Application\" />
   </ItemGroup>
 
 </Project>

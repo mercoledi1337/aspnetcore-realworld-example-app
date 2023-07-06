@@ -1,4 +1,4 @@
-﻿using Conduit.Domain;
+﻿using Conduit.Features.User.Domain;
 using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +14,7 @@ namespace Conduit.Infrastructure
 
         public ConduitContext(DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions)
             : base(options, operationalStoreOptions)
-        {
+        {            
         }
 
 
