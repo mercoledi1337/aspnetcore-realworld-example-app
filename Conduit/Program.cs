@@ -127,6 +127,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors("Front");
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
