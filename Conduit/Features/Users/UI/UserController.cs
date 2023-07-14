@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Cryptography;
 
+
 namespace Conduit.Features.Users.UI
 {
     [Route("[controller]")]
@@ -27,6 +28,15 @@ namespace Conduit.Features.Users.UI
         public async Task<IActionResult> Register(UserRegisterRequest request)
         {
             var command = new RegisteringUser(request);
+            var result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UserLoginRequest request)
+        {
+            var command = new LoginUser(request);
             var result = await _mediator.Send(command);
 
             return Ok(result);

@@ -1,12 +1,21 @@
 ﻿using Conduit.Features.Users.Infrastructure;
 using Conduit.Infrastructure.Security;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
+using System.ComponentModel.DataAnnotations;
 
 namespace Conduit.Features.Users
 {
+    public class UserRegisterRequest
+    {
+        [Required]
+        public string Username { get; set; } = string.Empty;
+        [Required, EmailAddress]
+        public string EmailAddress { get; set; } = string.Empty;
+        [Required, MinLength(6)]
+        public string Password { get; set; } = string.Empty;
+    }
+
     public record RegisteringUser(UserRegisterRequest UserRegister)
             : IRequest<UserEnvelope>;
 
@@ -20,7 +29,6 @@ namespace Conduit.Features.Users
             _context = context;
             _passwordHasher = passwordHasher;
         }
-        // to będzie trzeba na zewnątrz chyba
         
         public async Task<UserEnvelope> Handle(
             RegisteringUser request, CancellationToken cancellationToken)
