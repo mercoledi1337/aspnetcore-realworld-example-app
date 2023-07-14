@@ -1,5 +1,6 @@
-using Conduit.Features.User.Domain;
+using Conduit.Features.Users.Infrastructure;
 using Conduit.Infrastructure;
+using Conduit.Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,6 +22,7 @@ builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
 
 builder.Services.AddSingleton(authenticationSettings);
 
+builder.Services.AddScoped<IPasswordHash, PasswordHash>();
 //Add services to the container.
 builder.Services.AddCors(options =>
 {
@@ -32,26 +34,17 @@ builder.Services.AddCors(options =>
 
 var inmemory = builder.Configuration.GetValue<bool>("UseInMemory");
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ConduitContext>(options =>
+builder.Services.AddDbContext<DataContext>(options =>
 {
-    if (inmemory)
-    {
-        options.UseInMemoryDatabase("InMemory");
-    }
-    else
-    {
-        options.UseSqlServer(connectionString);
-    }
-
-
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
-             .AddEntityFrameworkStores<ConduitContext>();
+//builder.Services.AddDefaultIdentity<Profile>(options => options.SignIn.RequireConfirmedAccount = false)
+//             .AddEntityFrameworkStores<ConduitContext>();
 
-builder.Services.AddIdentityServer()
-    .AddApiAuthorization<User, ConduitContext>()
-    .AddDeveloperSigningCredential();
+//builder.Services.AddIdentityServer()
+//    .AddApiAuthorization<Profile, ConduitContext>()
+//    .AddDeveloperSigningCredential();
 
 builder.Services.AddAuthentication(option =>
 {
