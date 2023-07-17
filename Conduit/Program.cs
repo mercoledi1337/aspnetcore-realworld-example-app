@@ -1,4 +1,3 @@
-using Conduit.Features.Users.Infrastructure;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Security;
 using MediatR;

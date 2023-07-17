@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Conduit.Features.Users.Infrastructure;
-using Conduit.Features.Users;
 using Duende.IdentityServer.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +8,13 @@ using Microsoft.Identity.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Cryptography;
+using System.Text.Json;
+
 
 
 namespace Conduit.Features.Users.UI
 {
-    [Route("[controller]")]
+    [Route("/api")]
     [ApiController]
     public class UserController : Controller
     {
@@ -24,19 +24,18 @@ namespace Conduit.Features.Users.UI
             _mediator = mediator;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register(UserRegisterRequest request)
+        [HttpPost("users")]
+        public async Task<IActionResult> Register([FromBody] Register.RegisteringUser command)
         {
-            var command = new RegisteringUser(request);
             var result = await _mediator.Send(command);
 
             return Ok(result);
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(UserLoginRequest request)
+        [HttpPost("users/login")]
+        public async Task<IActionResult> Login([FromBody] Login.LoginUser command)
         {
-            var command = new LoginUser(request);
+            
             var result = await _mediator.Send(command);
 
             return Ok(result);

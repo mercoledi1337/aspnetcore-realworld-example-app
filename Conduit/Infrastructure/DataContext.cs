@@ -1,7 +1,7 @@
 ﻿using Conduit.Features.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace Conduit.Features.Users.Infrastructure
+namespace Conduit.Infrastructure
 {
     public class DataContext : DbContext
     {
