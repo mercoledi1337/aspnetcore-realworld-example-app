@@ -1,7 +1,7 @@
-﻿using Conduit.Features.Users;
+﻿using Conduit.Features.Users.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Conduit.Infrastructure
+namespace Conduit.Infrastructure.DataAccess
 {
     public class DataContext : DbContext
     {

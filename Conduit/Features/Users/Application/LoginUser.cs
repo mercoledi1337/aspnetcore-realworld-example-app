@@ -1,10 +1,10 @@
-﻿using Conduit.Infrastructure;
+﻿using Conduit.Infrastructure.DataAccess;
 using Conduit.Infrastructure.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace Conduit.Features.Users
+namespace Conduit.Features.Users.Application
 {
     public class Login
     {
@@ -24,11 +24,13 @@ namespace Conduit.Features.Users
         {
             private readonly DataContext _context;
             private readonly IPasswordHash _passwordHasher;
+            private readonly IJwtToken _jwt;
 
-            public LoginUserHandler(DataContext context, IPasswordHash passwordHasher)
+            public LoginUserHandler(DataContext context, IPasswordHash passwordHasher, IJwtToken jwt)
             {
                 _context = context;
                 _passwordHasher = passwordHasher;
+                _jwt = jwt;
             }
 
             public async Task<UserEnvelope> Handle(
@@ -44,10 +46,13 @@ namespace Conduit.Features.Users
                 {
                     throw new ArgumentException("Wrong password/email");
                 }
+                //zmienić nazwe na auth
                 // to jest tylko do sprawdzenia czy dobrze sprawdza hasło
                 var user = new User
                 {
-                    UserName = request.User.Email,
+                    UserName = wholeUser.UserName,
+                    Email = request.User.Email,
+                    Token = _jwt.CreateToken(wholeUser.UserName)
                 };
                 return new UserEnvelope(user);
             }

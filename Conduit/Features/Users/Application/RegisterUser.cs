@@ -1,4 +1,5 @@
-﻿using Conduit.Infrastructure;
+﻿using Conduit.Features.Users.Domain;
+using Conduit.Infrastructure.DataAccess;
 using Conduit.Infrastructure.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Conduit.Features.Users
+namespace Conduit.Features.Users.Application
 {
     public class Register
     {

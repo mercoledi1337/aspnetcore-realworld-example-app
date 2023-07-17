@@ -1,4 +1,4 @@
-﻿namespace Conduit.Features.Users
+﻿namespace Conduit.Features.Users.Domain
 {
     public class WholeUser
     {
@@ -15,6 +15,7 @@
         public string? Followers { get; set; }
         // here we need list
         public string? FavoriteArticles { get; set; }
-
+        //todo sprawdzanie email itp
+        //mail ma pl image musi coś mieć
     }
 }

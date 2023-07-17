@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Conduit.Features.Users.Application;
 using Duende.IdentityServer.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

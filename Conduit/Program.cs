@@ -1,4 +1,4 @@
-using Conduit.Infrastructure;
+using Conduit.Infrastructure.DataAccess;
 using Conduit.Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -22,6 +22,7 @@ builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
 builder.Services.AddSingleton(authenticationSettings);
 
 builder.Services.AddScoped<IPasswordHash, PasswordHash>();
+builder.Services.AddScoped<IJwtToken, JwtToken>();
 //Add services to the container.
 builder.Services.AddCors(options =>
 {
