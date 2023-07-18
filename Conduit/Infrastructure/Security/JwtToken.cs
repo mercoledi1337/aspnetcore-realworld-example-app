@@ -1,4 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Conduit.Features.Users.Application;
+using Conduit.Features.Users.Domain;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -13,10 +15,12 @@ namespace Conduit.Infrastructure.Security
         {
             _configuration = configuration;
         }
-        public string CreateToken(string username)
+        public string CreateToken(Person user)
         {
-            List<Claim> claims = new List<Claim> {
-                new Claim(ClaimTypes.Name, username)
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(

@@ -1,7 +1,9 @@
-﻿namespace Conduit.Infrastructure.Security
+﻿using Conduit.Features.Users.Domain;
+
+namespace Conduit.Infrastructure.Security
 {
     public interface IJwtToken
     {
-        string CreateToken(string username);
+        string CreateToken(Person username);
     }
 }

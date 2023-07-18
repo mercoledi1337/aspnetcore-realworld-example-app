@@ -5,10 +5,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
@@ -46,6 +48,19 @@ builder.Services.AddDbContext<DataContext>(options =>
 //    .AddApiAuthorization<Profile, ConduitContext>()
 //    .AddDeveloperSigningCredential();
 
+builder.Services.AddSwaggerGen(x =>
+{
+    x.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+    });
+
+    x.OperationFilter<SecurityRequirementsOperationFilter>();
+});
+
+
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme = "Bearer";
@@ -57,12 +72,23 @@ builder.Services.AddAuthentication(option =>
     cfg.SaveToken = true;
     cfg.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = authenticationSettings.JwtIssuer,
-        ValidAudience = authenticationSettings.JwtIssuer,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                builder.Configuration.GetSection("Authentication:JwtKey").Value!))
     };
 })
+
     .AddIdentityServerJwt();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("is-admin", policy =>
+    {
+        policy.RequireRole("admin");
+    });
+
+});
 
 builder.Services.AddMediatR(cfg =>
      cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
@@ -72,36 +98,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 // Inject an implementation of ISwaggerProvider with defaulted settings applied
-builder.Services.AddSwaggerGen(x =>
-{
-    x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Please insert JWT with Bearer into field",
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        BearerFormat = "JWT",
-        Scheme = "Bearer",
-    });
 
-    x.SupportNonNullableReferenceTypes();
-
-    x.AddSecurityRequirement(new OpenApiSecurityRequirement()
-    {
-                    {   new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                    },
-                    Array.Empty<string>()}
-    });
-    x.SwaggerDoc("v1", new OpenApiInfo { Title = "RealWorld API", Version = "v1" });
-    x.CustomSchemaIds(y => y.FullName);
-    x.DocInclusionPredicate((version, apiDescription) => true);
-    //x.TagActionsBy(y => new List<string>()
-    //{
-    //                y.GroupName ?? throw new InvalidOperationException()
-    //});
-});
 
 var app = builder.Build();
 

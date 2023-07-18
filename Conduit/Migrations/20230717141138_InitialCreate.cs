@@ -22,6 +22,7 @@ namespace Conduit.Migrations
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Followed = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Followers = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FavoriteArticles = table.Column<string>(type: "nvarchar(max)", nullable: true)

@@ -1,6 +1,6 @@
 ﻿namespace Conduit.Features.Users.Domain
 {
-    public class WholeUser
+    public class Person
     {
         public int Id { get; set; }
         public string? UserName { get; set; }
@@ -9,6 +9,7 @@
         public string? Image { get; set; }
         public byte[] PasswordHash { get; set; } = new byte[32];
         public byte[] PasswordSalt { get; set; } = new byte[32];
+        public string? Role { get; set; } = "nieadmin";
         // here we need list
         public string? Followed { get; set; }
         // here we need list

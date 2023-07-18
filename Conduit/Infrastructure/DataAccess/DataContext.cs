@@ -10,6 +10,6 @@ namespace Conduit.Infrastructure.DataAccess
 
         }
 
-        public DbSet<WholeUser> WholeUsers { get; set; }
+        public DbSet<Person> Persons { get; set; }
     }
 }

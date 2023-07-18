@@ -38,14 +38,14 @@ namespace Conduit.Features.Users.Application
                 RegisteringUser request, CancellationToken cancellationToken)
             {
 
-                if (await _context.WholeUsers
+                if (await _context.Persons
                     .Where(x => x.UserName == request.User.Username)
                     .AnyAsync(cancellationToken))
                 {
                     throw new ArgumentException("This username is in use");
                 }
 
-                if (await _context.WholeUsers
+                if (await _context.Persons
                     .Where(x => x.Email == request.User.Email)
                     .AnyAsync(cancellationToken))
                 {
@@ -56,7 +56,7 @@ namespace Conduit.Features.Users.Application
                  out byte[] PasswordHash,
                  out byte[] PasswordSalt);
 
-                var wholeUser = new WholeUser
+                var wholeUser = new Person
                 {
                     UserName = request.User.Username,
                     Email = request.User.Email,
@@ -70,7 +70,7 @@ namespace Conduit.Features.Users.Application
                     Email = request.User.Email,
                 };
 
-                _context.WholeUsers.Add(wholeUser);
+                _context.Persons.Add(wholeUser);
                 await _context.SaveChangesAsync();
                 return new UserEnvelope(user);
             }

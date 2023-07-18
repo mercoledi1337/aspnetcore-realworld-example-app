@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Conduit.Features.Users.Application
 {
-    public class Login
+    public class Authentication
     {
-        public class UserLoginRequest
+        public class UserAuthenticationRequest
         {
 
 
@@ -17,16 +17,16 @@ namespace Conduit.Features.Users.Application
             public string Password { get; set; } = string.Empty;
 
         }
-        public record LoginUser(UserLoginRequest User)
+        public record AuthenticationUser(UserAuthenticationRequest User)
         : IRequest<UserEnvelope>;
 
-        public class LoginUserHandler : IRequestHandler<LoginUser, UserEnvelope>
+        public class AuthenticationUserHandler : IRequestHandler<AuthenticationUser, UserEnvelope>
         {
             private readonly DataContext _context;
             private readonly IPasswordHash _passwordHasher;
             private readonly IJwtToken _jwt;
 
-            public LoginUserHandler(DataContext context, IPasswordHash passwordHasher, IJwtToken jwt)
+            public AuthenticationUserHandler(DataContext context, IPasswordHash passwordHasher, IJwtToken jwt)
             {
                 _context = context;
                 _passwordHasher = passwordHasher;
@@ -34,15 +34,15 @@ namespace Conduit.Features.Users.Application
             }
 
             public async Task<UserEnvelope> Handle(
-                LoginUser request, CancellationToken cancellationToken)
+                AuthenticationUser request, CancellationToken cancellationToken)
             {
-                var wholeUser = await _context.WholeUsers.Where(x => x.Email == request
+                var person = await _context.Persons.Where(x => x.Email == request
                 .User.Email).SingleOrDefaultAsync(cancellationToken);
-                if (wholeUser == null)
+                if (person == null)
                 {
                     throw new ArgumentException("Wrong password/email");
                 }
-                if (!_passwordHasher.VerifyPasswordHash(request.User.Password, wholeUser.PasswordHash, wholeUser.PasswordSalt))
+                if (!_passwordHasher.VerifyPasswordHash(request.User.Password, person.PasswordHash, person.PasswordSalt))
                 {
                     throw new ArgumentException("Wrong password/email");
                 }
@@ -50,9 +50,9 @@ namespace Conduit.Features.Users.Application
                 // to jest tylko do sprawdzenia czy dobrze sprawdza hasło
                 var user = new User
                 {
-                    UserName = wholeUser.UserName,
+                    UserName = person.UserName,
                     Email = request.User.Email,
-                    Token = _jwt.CreateToken(wholeUser.UserName)
+                    Token = _jwt.CreateToken(person)
                 };
                 return new UserEnvelope(user);
             }

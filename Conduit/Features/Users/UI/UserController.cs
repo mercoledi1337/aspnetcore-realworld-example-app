@@ -2,6 +2,7 @@
 using Conduit.Features.Users.Application;
 using Duende.IdentityServer.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +21,7 @@ namespace Conduit.Features.Users.UI
     public class UserController : Controller
     {
         private readonly IMediator _mediator;
-        public UserController( IMediator mediator)
+        public UserController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -34,12 +35,19 @@ namespace Conduit.Features.Users.UI
         }
 
         [HttpPost("users/login")]
-        public async Task<IActionResult> Login([FromBody] Login.LoginUser command)
+        public async Task<IActionResult> Login([FromBody] Authentication.AuthenticationUser command)
         {
             
             var result = await _mediator.Send(command);
 
             return Ok(result);
+        }
+
+
+        [HttpPost("admin-panel"), Authorize(Policy = "is-admin")]
+        public IActionResult TestingRoleReturnigJustOk()
+        {
+            return Ok("ok");
         }
     }
 }
