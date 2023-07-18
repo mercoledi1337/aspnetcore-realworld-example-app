@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Conduit.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230717141138_InitialCreate")]
+    [Migration("20230718073430_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,7 +24,7 @@ namespace Conduit.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Conduit.Features.Users.Domain.WholeUser", b =>
+            modelBuilder.Entity("Conduit.Features.Users.Domain.Person", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,7 +66,7 @@ namespace Conduit.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WholeUsers");
+                    b.ToTable("Persons");
                 });
 #pragma warning restore 612, 618
         }

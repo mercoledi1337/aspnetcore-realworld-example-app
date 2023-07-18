@@ -1,3 +1,4 @@
+using Conduit.Features.MIddleware;
 using Conduit.Infrastructure.DataAccess;
 using Conduit.Infrastructure.Security;
 using MediatR;
@@ -14,6 +15,8 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -119,9 +122,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("Front");
 
+
 app.UseHttpsRedirection();
 
+app.UseMiddleware<GlobalExceptionHandleingMiddleware>();
+
 app.UseAuthorization();
+
+
 
 app.MapControllers();
 

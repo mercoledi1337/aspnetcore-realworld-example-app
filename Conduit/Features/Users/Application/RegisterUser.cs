@@ -39,7 +39,7 @@ namespace Conduit.Features.Users.Application
             {
 
                 if (await _context.Persons
-                    .Where(x => x.UserName == request.User.Username)
+                    .Where(x => x.Username == request.User.Username)
                     .AnyAsync(cancellationToken))
                 {
                     throw new ArgumentException("This username is in use");
@@ -56,9 +56,9 @@ namespace Conduit.Features.Users.Application
                  out byte[] PasswordHash,
                  out byte[] PasswordSalt);
 
-                var wholeUser = new Person
+                var wholeUser = new Person(request.User.Email)
                 {
-                    UserName = request.User.Username,
+                    Username = request.User.Username,
                     Email = request.User.Email,
                     PasswordHash = PasswordHash,
                     PasswordSalt = PasswordSalt
@@ -66,7 +66,7 @@ namespace Conduit.Features.Users.Application
 
                 var user = new User
                 {
-                    UserName = request.User.Username,
+                    Username = request.User.Username,
                     Email = request.User.Email,
                 };
 

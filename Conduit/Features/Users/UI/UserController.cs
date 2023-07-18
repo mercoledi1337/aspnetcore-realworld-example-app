@@ -27,18 +27,18 @@ namespace Conduit.Features.Users.UI
         }
 
         [HttpPost("users")]
-        public async Task<IActionResult> Register([FromBody] Register.RegisteringUser command)
+        public async Task<IActionResult> Register([FromBody] Register.RegisteringUser command, CancellationToken cancellationToken = default)
         {
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(command, cancellationToken);
 
             return Ok(result);
         }
 
         [HttpPost("users/login")]
-        public async Task<IActionResult> Login([FromBody] Authentication.AuthenticationUser command)
+        public async Task<IActionResult> Login([FromBody] Authentication.AuthenticationUser command,CancellationToken cancellationToken = default)
         {
             
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(command, cancellationToken);
 
             return Ok(result);
         }

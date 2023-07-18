@@ -11,7 +11,7 @@ namespace Conduit.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "WholeUsers",
+                name: "Persons",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -29,7 +29,7 @@ namespace Conduit.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WholeUsers", x => x.Id);
+                    table.PrimaryKey("PK_Persons", x => x.Id);
                 });
         }
 
@@ -37,7 +37,7 @@ namespace Conduit.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "WholeUsers");
+                name: "Persons");
         }
     }
 }

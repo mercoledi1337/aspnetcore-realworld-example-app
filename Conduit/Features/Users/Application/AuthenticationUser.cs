@@ -20,13 +20,13 @@ namespace Conduit.Features.Users.Application
         public record AuthenticationUser(UserAuthenticationRequest User)
         : IRequest<UserEnvelope>;
 
-        public class AuthenticationUserHandler : IRequestHandler<AuthenticationUser, UserEnvelope>
+        public class AuthorizeUserHandler : IRequestHandler<AuthenticationUser, UserEnvelope>
         {
             private readonly DataContext _context;
             private readonly IPasswordHash _passwordHasher;
             private readonly IJwtToken _jwt;
 
-            public AuthenticationUserHandler(DataContext context, IPasswordHash passwordHasher, IJwtToken jwt)
+            public AuthorizeUserHandler(DataContext context, IPasswordHash passwordHasher, IJwtToken jwt)
             {
                 _context = context;
                 _passwordHasher = passwordHasher;
@@ -50,7 +50,7 @@ namespace Conduit.Features.Users.Application
                 // to jest tylko do sprawdzenia czy dobrze sprawdza hasło
                 var user = new User
                 {
-                    UserName = person.UserName,
+                    Username = person.Username,
                     Email = request.User.Email,
                     Token = _jwt.CreateToken(person)
                 };
