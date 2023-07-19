@@ -8,7 +8,7 @@ namespace Conduit.Features.Users.Domain
         public string? Username { get; set; }
         public string? Email { get; set; }
         public string? Bio { get; set; }
-        public string? Image { get; set; }
+        public string? Image { get; private set; }
         public byte[] PasswordHash { get; set; } = new byte[32];
         public byte[] PasswordSalt { get; set; } = new byte[32];
         public string? Role { get; set; } = "nieadmin";
@@ -20,7 +20,14 @@ namespace Conduit.Features.Users.Domain
         public string? FavoriteArticles { get; set; }
         //todo sprawdzanie email itp
         //mail ma pl image musi coś mieć
-
+        //wszystko na private setter
+        //sprawdzanie mappingu czy działa
+        //wyizolwać ustawienie maila do metody prywatnej
+        //utworzyć prywatny konstruktor
+        //utworzyć publiczną metode statyczną do tworzenia tego obiektu faktory method
+        //dodać metode zmień mail
+        //metoda do zmiany bio z walidacją długości jak jest złamana rzuć exception
+        //put i obsługa w middleware
         public Person(string email)
         {
             string tmp = email;
