@@ -56,13 +56,9 @@ namespace Conduit.Features.Users.Application
                  out byte[] PasswordHash,
                  out byte[] PasswordSalt);
 
-                var wholeUser = new Person(request.User.Email)
-                {
-                    Username = request.User.Username,
-                    Email = request.User.Email,
-                    PasswordHash = PasswordHash,
-                    PasswordSalt = PasswordSalt
-                };
+                string bio = "12345678901112";
+                Person wholeUser = Person.CreatePerson(request.User.Username, request.User.Email, PasswordHash, PasswordSalt, bio);
+
 
                 var user = new User
                 {

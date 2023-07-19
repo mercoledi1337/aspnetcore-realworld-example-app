@@ -16,13 +16,20 @@ namespace Conduit.Features.MIddleware
         }
         public async Task Invoke(HttpContext context)
         {
-            await _next(context);
-                HandleExceptionAsync(context);
+            try
+            {
+                await _next(context);
+            }
+            catch (ArgumentException ex)
+            {
+                await HandleExceptionAsync(context, ex);
+            }
 
         }
 
-        private async Task HandleExceptionAsync(HttpContext context) 
+        private async Task HandleExceptionAsync(HttpContext context, ArgumentException ex) 
         {
+            //tu można jakoś lepiej zrobić
             if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
             {
                 var code = HttpStatusCode.Unauthorized;
@@ -31,6 +38,17 @@ namespace Conduit.Features.MIddleware
                 context.Response.StatusCode = (int)code;
                 await context.Response.WriteAsync(result);
             }
+
+            if (ex.Message == "za długie")
+            {
+                var code = HttpStatusCode.BadRequest;
+                var result = JsonSerializer.Serialize(new { error = ex.Message });
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)code;
+                await context.Response.WriteAsync(result);
+            }
+
+            
         }
     }
 }
