@@ -22,13 +22,13 @@ namespace Conduit.Features.Users.Domain
         //todo sprawdzanie email itp
         //mail ma pl image musi coś mieć
         //wszystko na private setter /check
-        //sprawdzanie mappingu czy działa /nie działa, najpierw trzeba metode do tworzenia?
-        //wyizolwać ustawienie maila do metody prywatnej
-        //utworzyć prywatny konstruktor
-        //utworzyć publiczną metode statyczną do tworzenia tego obiektu faktory method
-        //dodać metode zmień mail
-        //metoda do zmiany bio z walidacją długości jak jest złamana rzuć exception
-        //put i obsługa w middleware
+        //sprawdzanie mappingu czy działa /nie wiem czy działa
+        //wyizolwać ustawienie maila do metody prywatnej /check
+        //utworzyć prywatny konstruktor /check
+        //utworzyć publiczną metode statyczną do tworzenia tego obiektu faktory method /check
+        //dodać metode zmień mail /check
+        //metoda do zmiany bio z walidacją długości jak jest złamana rzuć exception /check
+        //put i obsługa w middleware /jeszcze chyba nie
         private void ChangeMail(string Email)
         {
             string tmp = Email;
@@ -36,6 +36,7 @@ namespace Conduit.Features.Users.Domain
             if (extension[extension.Length - 1] == "pl")
                 Image = "FlagaPolski";
         }
+        //to jest tylko do testowania 
         private void ChangeBio(string Bio)
         {
             if (Bio.Length > 10)
@@ -59,7 +60,7 @@ namespace Conduit.Features.Users.Domain
             PasswordHash = Hash;
             PasswordSalt = Salt;
         }
-        private Person()
+        public Person()
         {
         }
     }

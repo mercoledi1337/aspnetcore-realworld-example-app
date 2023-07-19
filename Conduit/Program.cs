@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using Swashbuckle.AspNetCore.Filters;
 using System.Net.NetworkInformation;
 using System.Reflection;
@@ -96,6 +97,9 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddMediatR(cfg =>
      cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
+builder.Host.UseSerilog((context, configuration) => 
+    configuration.ReadFrom.Configuration(context.Configuration));
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -122,6 +126,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("Front");
 
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
