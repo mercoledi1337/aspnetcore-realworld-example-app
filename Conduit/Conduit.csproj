@@ -48,7 +48,6 @@
   <ItemGroup>
     <Folder Include="Features\User\Application\" />
     <Folder Include="Features\User\Application\" />
-    <Folder Include="Features\Weather\Application\" />
   </ItemGroup>
 
 </Project>
