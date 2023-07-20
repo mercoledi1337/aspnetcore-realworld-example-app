@@ -1,23 +1,14 @@
 using Conduit.Features.MIddleware;
 using Conduit.Infrastructure.DataAccess;
 using Conduit.Infrastructure.Security;
-using MediatR;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
-using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
-
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -116,7 +107,7 @@ if (app.Environment.IsDevelopment())
     {
         c.RouteTemplate = "swagger/{documentName}/swagger.json";
     });
-
+    
     // Enable middleware to serve swagger-ui assets(HTML, JS, CSS etc.)
     app.UseSwaggerUI(x =>
     {
@@ -126,15 +117,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("Front");
 
-app.UseSerilogRequestLogging();
+//app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
 app.UseMiddleware<GlobalExceptionHandleingMiddleware>();
 
+app.UseMiddleware<GlobalResponsExceptionHandlingMiddleware>();
+
 app.UseAuthorization();
-
-
 
 app.MapControllers();
 

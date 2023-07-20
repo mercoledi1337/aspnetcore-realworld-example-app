@@ -1,16 +1,7 @@
-﻿using AutoMapper;
-using Conduit.Features.Users.Application;
-using Duende.IdentityServer.Models;
+﻿using Conduit.Features.Users.Application;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Identity.Web;
-using System.ComponentModel.DataAnnotations;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text.Json;
 
 
 
@@ -43,7 +34,6 @@ namespace Conduit.Features.Users.UI
             return Ok(result);
         }
 
-
         [HttpPost("admin-panel"), Authorize(Policy = "is-admin")]
         public IActionResult TestingRoleReturnigJustOk()
         {
@@ -51,4 +41,3 @@ namespace Conduit.Features.Users.UI
         }
     }
 }
-

@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
-
-namespace Conduit.Features.Users.Domain
+﻿namespace Conduit.Features.Users.Domain
 {
     public class Person
     {
@@ -19,16 +16,6 @@ namespace Conduit.Features.Users.Domain
         public string? Followers { get; private set; }
         // here we need list
         public string? FavoriteArticles { get; private set; }
-        //todo sprawdzanie email itp
-        //mail ma pl image musi coś mieć
-        //wszystko na private setter /check
-        //sprawdzanie mappingu czy działa /nie wiem czy działa
-        //wyizolwać ustawienie maila do metody prywatnej /check
-        //utworzyć prywatny konstruktor /check
-        //utworzyć publiczną metode statyczną do tworzenia tego obiektu faktory method /check
-        //dodać metode zmień mail /check
-        //metoda do zmiany bio z walidacją długości jak jest złamana rzuć exception /check
-        //put i obsługa w middleware /jeszcze chyba nie
         private void ChangeMail(string Email)
         {
             string tmp = Email;
