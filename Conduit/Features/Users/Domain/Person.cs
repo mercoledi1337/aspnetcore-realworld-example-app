@@ -26,7 +26,7 @@
         //to jest tylko do testowania 
         private void ChangeBio(string Bio)
         {
-            if (Bio.Length > 10)
+            if (Bio.Length < 10)
                 throw new ArgumentException("za długie");
             this.Bio = Bio;
         }
