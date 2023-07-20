@@ -26,13 +26,13 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ../../Conduit
+        run: dotnet publish -c Release -o ../Conduit
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: .net-app
-          path: ../../Conduit
+          path: ../Conduit
   deploy:
     runs-on: ubuntu-latest
     needs: build
