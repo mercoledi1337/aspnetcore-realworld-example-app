@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Manage.Internal;
-using System.Text.Json.Serialization;
-
-namespace Conduit.Features.Users.Application
+﻿namespace Conduit.Features.Users.Application
 {
     public class UserDto
     {

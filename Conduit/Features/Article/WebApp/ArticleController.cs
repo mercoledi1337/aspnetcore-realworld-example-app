@@ -1,7 +1,5 @@
-﻿using Conduit.Features.Users.Application.Queries;
-using Conduit.Features.Users.Application;
+﻿using Conduit.Features.Users.Application;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.Features.Article.WebApp

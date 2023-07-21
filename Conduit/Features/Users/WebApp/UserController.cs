@@ -1,5 +1,4 @@
 ﻿using Conduit.Features.Users.Application;
-using Conduit.Features.Users.Application.Dto;
 using Conduit.Features.Users.Application.Queries;
 using Conduit.Infrastructure;
 using MediatR;

@@ -1,16 +1,8 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Azure.Core;
-using Conduit.Entities;
+﻿using Conduit.Entities;
 using Conduit.Infrastructure.DataAccess;
 using Conduit.Infrastructure.Security;
-using Duende.IdentityServer.Models;
-using IdentityServer4.Models;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading;
 
 namespace Conduit.Features.Users.Application.Queries
 {
@@ -24,7 +16,6 @@ namespace Conduit.Features.Users.Application.Queries
         {
             private readonly DataContext _context;
             private readonly IHttpContextAccessor _httpContextAccessor;
-            private readonly IMapper _mapper;
             private readonly IJwtToken _jwt;
 
             public CurrentUserHandler(DataContext context, IHttpContextAccessor httpContextAccessor, IJwtToken jwt)

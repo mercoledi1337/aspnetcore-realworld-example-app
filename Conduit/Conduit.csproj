@@ -50,4 +50,10 @@
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Article\Application\Commands\" />
+    <Folder Include="Features\Article\Application\Dto\" />
+    <Folder Include="Features\Article\Application\Queries\" />
+  </ItemGroup>
+
 </Project>

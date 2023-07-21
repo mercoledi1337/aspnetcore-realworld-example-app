@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using static Conduit.Features.Users.Application.Update;
+﻿using static Conduit.Features.Users.Application.Update;
 
 namespace Conduit.Entities
 {

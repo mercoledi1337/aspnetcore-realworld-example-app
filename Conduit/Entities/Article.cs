@@ -20,11 +20,16 @@ namespace Conduit.Entities
             Body = body;
             Author = autor;
             CreatedAt = DateTime.UtcNow;
+            UpdatedAt = DateTime.UtcNow;
         }
-
-
         public Article()
         {
+        }
+
+        public static Person CreateArticle(string username, string mail, byte[] hash, byte[] salt, string bio)
+        {
+
+          
         }
     }
 }
