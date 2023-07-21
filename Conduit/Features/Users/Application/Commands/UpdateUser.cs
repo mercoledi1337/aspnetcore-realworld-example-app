@@ -50,7 +50,7 @@ namespace Conduit.Features.Users.Application
 
                 person.UpdatePerson(request.User, PasswordHash, PasswordSalt);
 
-                var user = new User
+                var user = new UserDto
                 {
                     Username = request.User.Username,
                     Email = request.User.Email,

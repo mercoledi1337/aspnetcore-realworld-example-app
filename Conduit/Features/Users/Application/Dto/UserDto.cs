@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Conduit.Features.Users.Application
 {
-    public class User
+    public class UserDto
     {
         public string? Email { get; set; }
         public string? Token { get; set; }
@@ -13,5 +13,5 @@ namespace Conduit.Features.Users.Application
         public string? Image { get; set; }
     }
 
-    public record UserEnvelope(User User);
+    public record UserEnvelope(UserDto User);
 }

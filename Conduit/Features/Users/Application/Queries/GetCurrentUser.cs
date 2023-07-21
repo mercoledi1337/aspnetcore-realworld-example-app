@@ -48,7 +48,7 @@ namespace Conduit.Features.Users.Application.Queries
                 var user = _context.Persons
                     .Where(x => x.Id == int
                     .Parse(sub))
-                    .Select(x => new User
+                    .Select(x => new UserDto
                     {
                         Username = x.Username,
                         Email = x.Email,

@@ -1,5 +1,7 @@
 ﻿using Conduit.Features.Users.Application;
+using Conduit.Features.Users.Application.Dto;
 using Conduit.Features.Users.Application.Queries;
+using Conduit.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +14,12 @@ namespace Conduit.Features.Users.UI
     public class UserController : Controller
     {
         private readonly IMediator _mediator;
-        public UserController(IMediator mediator)
+        private readonly ICurrentUser _currentUser;
+
+        public UserController(IMediator mediator, ICurrentUser currentUser)
         {
             _mediator = mediator;
+            _currentUser = currentUser;
         }
 
         [HttpPost("users")]
@@ -51,10 +56,14 @@ namespace Conduit.Features.Users.UI
         [HttpGet("user"), Authorize]
         public async Task<UserEnvelope> GetCurrentUser()
         {
-            //to później przeniść 
-            var sub = HttpContext?.User.FindFirst(type: "sud")?.Value;
-            var result = await _mediator.Send(new GetCurrentUser.CurrentUser(sub));
+            var result = await _mediator.Send(new GetCurrentUser.CurrentUser( _currentUser.GetCurrentId() ?? "<unknown>"));
             return result;
         }
+        //Dodać to potem
+        //[HttpGet("profiles/{username}"), Authorize]
+        //public Task<ProfileEnvelope> Get(string username)
+        //{
+        //    return _mediator.Send();
+        //}
     }
 }

@@ -57,7 +57,7 @@ namespace Conduit.Features.Users.Application
                 Person wholeUser = Person.CreatePerson(request.User.Username, request.User.Email, PasswordHash, PasswordSalt, bio);
 
 
-                var user = new User
+                var user = new UserDto
                 {
                     Username = request.User.Username,
                     Email = request.User.Email,

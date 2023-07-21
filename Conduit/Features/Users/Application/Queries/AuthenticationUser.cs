@@ -47,7 +47,7 @@ namespace Conduit.Features.Users.Application
                 }
                 //zmienić nazwe na auth
                 // to jest tylko do sprawdzenia czy dobrze sprawdza hasło
-                var user = new User
+                var user = new UserDto
                 {
                     Username = person.Username,
                     Email = request.User.Email,
