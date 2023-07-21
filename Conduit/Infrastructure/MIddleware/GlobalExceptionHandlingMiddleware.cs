@@ -26,15 +26,11 @@ namespace Conduit.Features.MIddleware
             }
             private async Task HandleExceptionAsync(HttpContext context, ArgumentException ex)
             {
-
-                if (ex.Message == "za długie")
-                {
                     var code = HttpStatusCode.BadRequest;
                     var result = JsonSerializer.Serialize(new { error = ex.Message });
                     context.Response.ContentType = "application/json";
                     context.Response.StatusCode = (int)code;
                     await context.Response.WriteAsync(result);
-                }
             }
         }
 }

@@ -1,4 +1,4 @@
-﻿namespace Conduit.Features.Users.Domain
+﻿namespace Conduit.Entities
 {
     public interface IPerson
     {

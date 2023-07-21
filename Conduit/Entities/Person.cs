@@ -1,4 +1,7 @@
-﻿namespace Conduit.Features.Users.Domain
+﻿using System.Drawing;
+using static Conduit.Features.Users.Application.Update;
+
+namespace Conduit.Entities
 {
     public class Person
     {
@@ -30,14 +33,23 @@
                 throw new ArgumentException("za długie");
             this.Bio = Bio;
         }
-        public static Person CreatePerson(string Username, string Email, byte[] Hash, byte[] Salt, string Bio)
+        public static Person CreatePerson(string username, string mail, byte[] hash, byte[] salt, string bio)
         {
 
-            Person person = new(Username, Email, Hash, Salt);
-            person.ChangeBio(Bio);
-            person.ChangeMail(Email);
-            //przy rejestracji jest zrobione statyczne bio do sprawdzania czy działa
+            Person person = new(username, mail, hash, salt);
+            person.ChangeMail(mail);
             return person;
+        }
+        //musi mieć ten obiek co aktualizuje plus hash/salt
+        // znaleźć tą osobe co chcemu update
+        public void UpdatePerson(UserUpdateRequest user, byte[] hash, byte[] salt)
+        {
+            Image = user.Image;
+            Username = user.Username;
+            ChangeBio(user.Bio);
+            Email = user.Email;
+            PasswordHash = hash;
+            PasswordSalt = salt;
         }
 
         private Person(string Username, string Email, byte[] Hash, byte[] Salt)

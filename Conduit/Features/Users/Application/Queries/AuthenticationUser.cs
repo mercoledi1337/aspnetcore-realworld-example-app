@@ -2,7 +2,6 @@
 using Conduit.Infrastructure.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 
 namespace Conduit.Features.Users.Application
 {

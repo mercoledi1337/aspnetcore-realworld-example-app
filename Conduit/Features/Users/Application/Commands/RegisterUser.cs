@@ -1,4 +1,4 @@
-﻿using Conduit.Features.Users.Domain;
+﻿using Conduit.Entities;
 using Conduit.Infrastructure.DataAccess;
 using Conduit.Infrastructure.Security;
 using MediatR;

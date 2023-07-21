@@ -1,4 +1,4 @@
-﻿using Conduit.Features.Users.Domain;
+﻿using Conduit.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Infrastructure.DataAccess

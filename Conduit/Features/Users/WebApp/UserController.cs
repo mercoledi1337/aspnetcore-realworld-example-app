@@ -1,8 +1,8 @@
 ﻿using Conduit.Features.Users.Application;
+using Conduit.Features.Users.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 
 
 namespace Conduit.Features.Users.UI
@@ -26,18 +26,35 @@ namespace Conduit.Features.Users.UI
         }
 
         [HttpPost("users/login")]
-        public async Task<IActionResult> Login([FromBody] Authentication.AuthenticationUser command,CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Login([FromBody] Authentication.AuthenticationUser command, CancellationToken cancellationToken = default)
         {
-            
             var result = await _mediator.Send(command, cancellationToken);
 
             return Ok(result);
         }
 
-        [HttpPost("admin-panel"), Authorize(Policy = "is-admin")]
+        [HttpPost("admin-panel"), Authorize(policy: "is-admin")]
         public IActionResult TestingRoleReturnigJustOk()
         {
-            return Ok("ok");
+
+            return Ok();
+        }
+
+        [HttpPut("user"), Authorize]
+        public async Task<IActionResult> UpdateUser([FromBody] Update.UpdateUser command)
+        {
+
+            await _mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpGet("user"), Authorize]
+        public async Task<UserEnvelope> GetCurrentUser()
+        {
+            //to później przeniść 
+            var sub = HttpContext?.User.FindFirst(type: "sud")?.Value;
+            var result = await _mediator.Send(new GetCurrentUser.CurrentUser(sub));
+            return result;
         }
     }
 }
