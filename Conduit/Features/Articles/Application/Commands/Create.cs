@@ -1,5 +1,6 @@
 ﻿using Conduit.Entities;
 using Conduit.Features.Articles.Application.Dto;
+using Conduit.Infrastructure;
 using Conduit.Infrastructure.DataAccess;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace Conduit.Features.Articles.Application.Commands
             public string? Title { get; set; }
             public string? Description { get; set; }
             public string? Body { get; set; }
-            public List<string>? TagList { get; set; }
+            public string[]? TagList { get; set; }
         }
 
         public record CreateingArticle(ArticleCreateRequest Article)
@@ -40,18 +41,40 @@ namespace Conduit.Features.Articles.Application.Commands
                      .Where(x => x.Id == int.Parse(sub))
                      .SingleAsync(cancellationToken);
 
-                Article article = Article.CreateArticle(request.Article.Title, request.Article.Description, request.Article.Body, person);
-
-                var articleDto = new ArticleDto
+                var tags = new List<Tag>();
+                foreach (var tag in (request.Article.TagList ?? Enumerable.Empty<string>()))
                 {
-                    Title = request.Article.Title,
-                    Description = request.Article.Description,
-                    Body = request.Article.Body,
-                };
+                    var t = await _context.Tags.FindAsync(tag);
+                    if (t == null)
+                    {
+                        t = new Tag()
+                        {
+                            TagId = tag
+                        };
+                        await _context.Tags.AddAsync(t, cancellationToken);
+                        await _context.SaveChangesAsync(cancellationToken);
+                    }
+                    tags.Add(t);
+                }
 
-                _context.Articles.Add(article);
-                await _context.SaveChangesAsync();
-                return new Dto.ArticleEnvelope(articleDto);
+                Article article = Article.CreateArticle(request.Article, person);
+
+                //var articleDto = new ArticleDto
+                //{
+                //    Title = request.Article.Title,
+                //    Description = request.Article.Description,
+                //    Body = request.Article.Body,
+                //};
+
+                await _context.Articles.AddAsync(article, cancellationToken);
+                await _context.ArticleTags.AddRangeAsync(tags.Select(x => new ArticleTag()
+                {
+                    Article = article,
+                    Tag = x
+                }), cancellationToken);
+
+                await _context.SaveChangesAsync(cancellationToken);
+                return new ArticleEnvelope(article);
             }
         }
     }

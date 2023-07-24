@@ -1,7 +1,4 @@
-﻿using Conduit.Entities;
-using Conduit.Features.Articles.Application.Commands;
-using Conduit.Features.Users.Application;
-using Conduit.Infrastructure.DataAccess;
+﻿using Conduit.Features.Articles.Application.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

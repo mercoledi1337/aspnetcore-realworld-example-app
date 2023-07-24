@@ -45,7 +45,7 @@ namespace Conduit.Migrations
                     b.Property<int>("FavoriteCount")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("Favortited")
+                    b.Property<bool?>("Favorited")
                         .HasColumnType("bit");
 
                     b.Property<string>("Slug")
@@ -62,6 +62,21 @@ namespace Conduit.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Articles");
+                });
+
+            modelBuilder.Entity("Conduit.Entities.ArticleTag", b =>
+                {
+                    b.Property<int>("ArticleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TagId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ArticleId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ArticleTags");
                 });
 
             modelBuilder.Entity("Conduit.Entities.Person", b =>
@@ -109,6 +124,16 @@ namespace Conduit.Migrations
                     b.ToTable("Persons");
                 });
 
+            modelBuilder.Entity("Conduit.Entities.Tag", b =>
+                {
+                    b.Property<string>("TagId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("TagId");
+
+                    b.ToTable("Tags");
+                });
+
             modelBuilder.Entity("Conduit.Entities.Article", b =>
                 {
                     b.HasOne("Conduit.Entities.Person", "Author")
@@ -116,6 +141,35 @@ namespace Conduit.Migrations
                         .HasForeignKey("AuthorId");
 
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("Conduit.Entities.ArticleTag", b =>
+                {
+                    b.HasOne("Conduit.Entities.Article", "Article")
+                        .WithMany("ArticleTags")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Conduit.Entities.Tag", "Tag")
+                        .WithMany("ArticleTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Article");
+
+                    b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("Conduit.Entities.Article", b =>
+                {
+                    b.Navigation("ArticleTags");
+                });
+
+            modelBuilder.Entity("Conduit.Entities.Tag", b =>
+                {
+                    b.Navigation("ArticleTags");
                 });
 #pragma warning restore 612, 618
         }

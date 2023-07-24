@@ -1,9 +1,14 @@
-﻿using Conduit.Infrastructure.Security;
+﻿using Conduit.Infrastructure;
+using Conduit.Infrastructure.Security;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using static Conduit.Features.Articles.Application.Commands.Create;
 
 namespace Conduit.Entities
 {
     public class Article
     {
+        [JsonIgnore]
         public int Id { get; set; }
         //To trzeba żeby z wyszukiwania działało
         public string? Slug { get; private set; }
@@ -11,21 +16,23 @@ namespace Conduit.Entities
         public string? Description { get; private set; } 
         public string? Body { get; private set; }
         public Person? Author { get; private set; }
-        public bool? Favortited { get; private set; }
+        public bool? Favorited { get; private set; }
         public int FavoriteCount { get; private set; }
-        //public List<string>? TagList 
-        //obmyśleć jak to zrobić
-        //public List<ArticleTag>? ArticlesTags { get; private set; }
+        [NotMapped]
+        public List<string> TagList => ArticleTags.Where(x => x.TagId is not null).Select(x => x.TagId!).ToList();
+        [JsonIgnore]
+        public List<ArticleTag> ArticleTags { get; set; } = new();
         //stowrzyć komentarze
         //public List<Comment> Comments { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
-        private Article(string title, string description, string body, Person autor)
+        private Article(ArticleCreateRequest request, Person autor)
         {
-            Title = title;
-            Description = description;
-            Body = body;
+            Title = request.Title;
+            Description = request.Description;
+            Body = request.Body;
             Author = autor;
+            Slug = request.Title.GenerateSlug();
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -33,9 +40,9 @@ namespace Conduit.Entities
         {
         }
 
-        public static Article CreateArticle(string title, string description, string body,  Person autor)
+        public static Article CreateArticle(ArticleCreateRequest request, Person autor)
         {
-            Article article = new(title, description, body, autor);
+            Article article = new(request, autor);
             return article;
 
         }

@@ -32,10 +32,9 @@ namespace Conduit.Entities
             if (extension[extension.Length - 1] == "pl")
                 Image = "FlagaPolski";
         }
-        //to jest tylko do testowania 
         private void ChangeBio(string Bio)
         {
-            if (Bio.Length > 10)
+            if (Bio.Length > 300)
                 throw new ArgumentException("za długie");
             this.Bio = Bio;
         }
