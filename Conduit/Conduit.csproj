@@ -51,9 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Article\Application\Commands\" />
-    <Folder Include="Features\Article\Application\Dto\" />
-    <Folder Include="Features\Article\Application\Queries\" />
+    <Folder Include="Features\Articles\Application\Queries\" />
   </ItemGroup>
 
 </Project>

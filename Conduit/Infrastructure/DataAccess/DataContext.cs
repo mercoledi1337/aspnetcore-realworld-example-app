@@ -11,5 +11,6 @@ namespace Conduit.Infrastructure.DataAccess
         }
 
         public DbSet<Person> Persons { get; set; }
+        public DbSet<Article> Articles { get; set; }
     }
 }

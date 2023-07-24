@@ -1,4 +1,5 @@
 using Conduit.Features.MIddleware;
+using Conduit.Infrastructure;
 using Conduit.Infrastructure.DataAccess;
 using Conduit.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication;
@@ -18,6 +19,7 @@ builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
 
 builder.Services.AddSingleton(authenticationSettings);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddScoped<IPasswordHash, PasswordHash>();
 builder.Services.AddScoped<IJwtToken, JwtToken>();
 //Add services to the container.
@@ -122,9 +124,13 @@ app.UseCors("Front");
 
 app.UseHttpsRedirection();
 
+
+
 app.UseMiddleware<GlobalExceptionHandleingMiddleware>();
 
 app.UseMiddleware<GlobalResponsExceptionHandlingMiddleware>();
+
+
 
 app.UseAuthorization();
 

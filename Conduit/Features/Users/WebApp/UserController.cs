@@ -53,9 +53,9 @@ namespace Conduit.Features.Users.UI
         }
 
         [HttpGet("user"), Authorize]
-        public async Task<UserEnvelope> GetCurrentUser()
+        public async Task<UserEnvelope> GetCurrent(CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetCurrentUser.CurrentUser( _currentUser.GetCurrentId() ?? "<unknown>"));
+            var result = await _mediator.Send(new GetCurrentUser.CurrentUser( _currentUser.GetCurrentId() ?? "<unknown>"), cancellationToken);
             return result;
         }
         //Dodać to potem

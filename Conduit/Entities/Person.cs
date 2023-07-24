@@ -1,22 +1,29 @@
-﻿using static Conduit.Features.Users.Application.Update;
+﻿using System.Text.Json.Serialization;
+using static Conduit.Features.Users.Application.Update;
 
 namespace Conduit.Entities
 {
     public class Person
     {
+        [JsonIgnore]
         public int Id { get; private set; }
         public string? Username { get; private set; }
         public string? Email { get; private set; }
         public string? Bio { get; private set; }
         public string? Image { get; private set; }
+        [JsonIgnore]
         public byte[] PasswordHash { get; private set; } = new byte[32];
+        [JsonIgnore]
         public byte[] PasswordSalt { get; private set; } = new byte[32];
         public string? Role { get; private set; } = "nieadmin";
         // here we need list
+        [JsonIgnore]
         public string? Followed { get; private set; }
         // here we need list
+        [JsonIgnore]
         public string? Followers { get; private set; }
         // here we need list
+        [JsonIgnore]
         public string? FavoriteArticles { get; private set; }
         private void ChangeMail(string Email)
         {
@@ -32,7 +39,7 @@ namespace Conduit.Entities
                 throw new ArgumentException("za długie");
             this.Bio = Bio;
         }
-        public static Person CreatePerson(string username, string mail, byte[] hash, byte[] salt, string bio)
+        public static Person CreatePerson(string username, string mail, byte[] hash, byte[] salt)
         {
 
             Person person = new(username, mail, hash, salt);
