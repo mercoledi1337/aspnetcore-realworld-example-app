@@ -1,3 +1,4 @@
+using Conduit.Features.Articles.Application.Commands;
 using Conduit.Features.MIddleware;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.DataAccess;
@@ -21,6 +22,7 @@ builder.Services.AddSingleton(authenticationSettings);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddScoped<IPasswordHash, PasswordHash>();
+builder.Services.AddScoped<Create>();
 builder.Services.AddScoped<IJwtToken, JwtToken>();
 //Add services to the container.
 builder.Services.AddCors(options =>

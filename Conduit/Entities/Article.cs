@@ -28,11 +28,11 @@ namespace Conduit.Entities
         public DateTime UpdatedAt { get; private set; }
         private Article(ArticleCreateRequest request, Person autor)
         {
-            Title = request.Title;
-            Description = request.Description;
-            Body = request.Body;
+            Title = request.title;
+            Description = request.description;
+            Body = request.body;
             Author = autor;
-            Slug = request.Title.GenerateSlug();
+            Slug = request.title.GenerateSlug();
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
         }

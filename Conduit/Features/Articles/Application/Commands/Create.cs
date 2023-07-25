@@ -4,78 +4,85 @@ using Conduit.Infrastructure;
 using Conduit.Infrastructure.DataAccess;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace Conduit.Features.Articles.Application.Commands
 {
     public class Create
     {
+        
+
         public class ArticleCreateRequest
         {
-            public string? Title { get; set; }
-            public string? Description { get; set; }
-            public string? Body { get; set; }
-            public string[]? TagList { get; set; }
+            public string? title { get; set; }
+            public string? description { get; set; }
+            public string? body { get; set; }
+            public string[]? tagList { get; set; }
         }
 
-        public record CreateingArticle(ArticleCreateRequest Article)
-                : IRequest<ArticleEnvelope>;
+        public record ArticleCreateEnvelope(ArticleCreateRequest article);
 
+        private readonly DataContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public class CreatingArticleHandler : IRequestHandler<CreateingArticle, ArticleEnvelope>
+        public Create(DataContext context, IHttpContextAccessor httpContextAccessor)
         {
-            private readonly DataContext _context;
-            private readonly IHttpContextAccessor _httpContextAccessor;
+            _context = context;
+            _httpContextAccessor = httpContextAccessor;
+        }
 
-            public CreatingArticleHandler(DataContext context, IHttpContextAccessor httpContextAccessor)
+        private async Task<bool> CheckTitile(string title)
+        {
+            var res = await _context.Articles.FirstAsync(x => x.Title == title);
+            return (res != null);
+        }
+
+        private async Task<ArticleEnvelope> CreateArticle(ArticleCreateRequest request, Person person, List<Tag> tags)
+        {
+            
+            Article article = Article.CreateArticle(request, person);
+
+            await _context.Articles.AddAsync(article);
+            await _context.ArticleTags.AddRangeAsync(tags.Select(x => new ArticleTag()
             {
-                _context = context;
-                _httpContextAccessor = httpContextAccessor;
+                Article = article,
+                Tag = x
+            }));
+            await _context.SaveChangesAsync();
+            return new ArticleEnvelope(article);
+        }
+
+            public async Task<ArticleEnvelope> CreateArticle(ArticleCreateRequest request)
+            {
+                
+            var sub = _httpContextAccessor.HttpContext?.User.FindFirst(type: "sud")?.Value;
+
+            if (await CheckTitile(request.title)) 
+            {
+                throw new ArgumentException("Title is already in use");
             }
 
-            public async Task<ArticleEnvelope> Handle(
-                CreateingArticle request, CancellationToken cancellationToken)
+            var tags = new List<Tag>();
+            foreach (var tag in (request.tagList ?? Enumerable.Empty<string>()))
             {
-                var sub = _httpContextAccessor.HttpContext?.User.FindFirst(type: "sud")?.Value;
-
-                Person person = await _context.Persons
-                     .Where(x => x.Id == int.Parse(sub))
-                     .SingleAsync(cancellationToken);
-
-                var tags = new List<Tag>();
-                foreach (var tag in (request.Article.TagList ?? Enumerable.Empty<string>()))
+                var t = await _context.Tags.FindAsync(tag);
+                if (t == null)
                 {
-                    var t = await _context.Tags.FindAsync(tag);
-                    if (t == null)
+                    t = new Tag()
                     {
-                        t = new Tag()
-                        {
-                            TagId = tag
-                        };
-                        await _context.Tags.AddAsync(t, cancellationToken);
-                        await _context.SaveChangesAsync(cancellationToken);
-                    }
-                    tags.Add(t);
+                        TagId = tag
+                    };
+                    await _context.Tags.AddAsync(t);
+                    await _context.SaveChangesAsync();
                 }
+                tags.Add(t);
+            }
 
-                Article article = Article.CreateArticle(request.Article, person);
+            Person person = await _context.Persons
+                     .Where(x => x.Id == int.Parse(sub))
+                     .SingleAsync();
 
-                //var articleDto = new ArticleDto
-                //{
-                //    Title = request.Article.Title,
-                //    Description = request.Article.Description,
-                //    Body = request.Article.Body,
-                //};
-
-                await _context.Articles.AddAsync(article, cancellationToken);
-                await _context.ArticleTags.AddRangeAsync(tags.Select(x => new ArticleTag()
-                {
-                    Article = article,
-                    Tag = x
-                }), cancellationToken);
-
-                await _context.SaveChangesAsync(cancellationToken);
-                return new ArticleEnvelope(article);
+                return await CreateArticle(request, person, tags);
             }
         }
     }
-}
