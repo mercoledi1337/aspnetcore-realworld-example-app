@@ -1,12 +1,10 @@
 ﻿using Conduit.Features.Articles.Application.Commands;
-using Conduit.Features.Articles.Application.Dto;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Conduit.Features.Articles.WebApp
 {
-        [Route("/api")]
+    [Route("/api")]
         [ApiController]
         public class ArticleController : Controller
         {

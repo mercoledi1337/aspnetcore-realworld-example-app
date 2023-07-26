@@ -1,8 +1,6 @@
-﻿using Azure;
-using Conduit.Entities;
+﻿using Conduit.Entities;
 using Conduit.Features.Articles.Application.Interfaces;
 using Conduit.Infrastructure.DataAccess;
-using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Features.Articles.Application.Repos
 {
@@ -30,11 +28,6 @@ namespace Conduit.Features.Articles.Application.Repos
                 Tag = x
             }));
             _context.SaveChanges();
-        }
-
-        public List<ArticleTag> GetArticleTag(int id)
-        {
-            return _context.ArticleTags.Where(x => x.ArticleId == id).ToList();
         }
     }
 }

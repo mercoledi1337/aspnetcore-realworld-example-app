@@ -1,16 +1,11 @@
 ﻿using Conduit.Entities;
 using Conduit.Features.Articles.Application.Dto;
-using Conduit.Infrastructure;
-using Conduit.Infrastructure.DataAccess;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System.Threading;
+using Conduit.Features.Articles.Application.Interfaces;
 
 namespace Conduit.Features.Articles.Application.Commands
 {
     public class Create
     {
-        
 
         public class ArticleCreateRequest
         {
@@ -22,20 +17,26 @@ namespace Conduit.Features.Articles.Application.Commands
 
         public record ArticleCreateEnvelope(ArticleCreateRequest article);
 
-        private readonly DataContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IArticlesRepository _articlesRepository;
+        private readonly ITagsRepository _tagsRepository;
+        private readonly IPersonRepository _personRepository;
 
-        public Create(DataContext context, IHttpContextAccessor httpContextAccessor)
+        public Create(IHttpContextAccessor httpContextAccessor
+            ,IArticlesRepository articlesRepository
+            ,ITagsRepository tagsRepository
+            ,IPersonRepository personRepository)
         {
-            _context = context;
             _httpContextAccessor = httpContextAccessor;
+            _articlesRepository = articlesRepository;
+            _tagsRepository = tagsRepository;
+            _personRepository = personRepository;
         }
-
         private async Task<bool> CheckTitile(string title)
         {
             try
             {
-                var res = await _context.Articles.FirstAsync(x => x.Title == title);
+                var res = _articlesRepository.CheckTitle(title);
                 return (res == null);
             } catch
             { 
@@ -47,13 +48,8 @@ namespace Conduit.Features.Articles.Application.Commands
         {
             Article article = Article.CreateArticle(request, person);
 
-            await _context.Articles.AddAsync(article);
-            await _context.ArticleTags.AddRangeAsync(tags.Select(x => new ArticleTag()
-            {
-                Article = article,
-                Tag = x
-            }));
-            await _context.SaveChangesAsync();
+            await _articlesRepository.AddArticle(article);
+            await _articlesRepository.AddArticleTag(article, tags);
             return new ArticleEnvelope(article);
         }
 
@@ -70,24 +66,21 @@ namespace Conduit.Features.Articles.Application.Commands
             var tags = new List<Tag>();
             foreach (var tag in (request.tagList ?? Enumerable.Empty<string>()))
             {
-                var t = await _context.Tags.FindAsync(tag);
+                var t = _tagsRepository.GetTag(tag);
                 if (t == null)
                 {
                     t = new Tag()
                     {
                         TagId = tag
                     };
-                    await _context.Tags.AddAsync(t);
-                    await _context.SaveChangesAsync();
+                    _tagsRepository.UpdateTags(t);
                 }
                 tags.Add(t);
             }
 
-            Person person = await _context.Persons
-                     .Where(x => x.Id == int.Parse(sub))
-                     .SingleAsync();
+            Person person = await _personRepository.GetPerson(sub);
 
-                return await CreateArticle(request, person, tags);
+            return await CreateArticle(request, person, tags);
             }
         // w samym obiekcie article zmieniamy tagi, tam jest sprawdzany obecny obiekt pobrany z bazy i w tedy jak zmienimy w obiekcie 
         // i przejdzie walidacje zapisujemy go

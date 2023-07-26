@@ -1,9 +1,4 @@
-﻿using Conduit.Features.Articles.Application.Commands;
-using Conduit.Infrastructure;
-using Conduit.Infrastructure.Security;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
+﻿using Conduit.Infrastructure;
 using System.Text.Json.Serialization;
 using static Conduit.Features.Articles.Application.Commands.Create;
 

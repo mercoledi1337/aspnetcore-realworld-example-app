@@ -1,16 +1,9 @@
-﻿using Azure.Core;
-using Conduit.Entities;
-using Conduit.Features.Articles.Application.Dto;
+﻿using Conduit.Entities;
 using Conduit.Features.Articles.Application.Interfaces;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Diagnostics;
-using static Conduit.Features.Articles.Application.Commands.Create;
+
 
 namespace Conduit.Features.Articles.Application.Commands
 {
-
 
     public record SetTagsFroArticlesCommand(int Article, List<string> Tags);
 
@@ -27,8 +20,6 @@ namespace Conduit.Features.Articles.Application.Commands
         public async Task Handle(SetTagsFroArticlesCommand command)
         {
             var article = _articlesRepository.GetArticle(command.Article);
-            //nie mogę wyciągnąć z artykułów jego tagów
-            var currentTags = _tagsRepository.GetArticleTag(command.Article);
             //chcemy wrzucić do encji i potem po przejściu validacji jej użyć
             article.SetTags(command.Tags);
             //sprawdzić czy tagi są w użyciu
@@ -45,7 +36,6 @@ namespace Conduit.Features.Articles.Application.Commands
                     _tagsRepository.UpdateTags(t);
                     tags.Add(t);
                 }
-               
             }
 
             _tagsRepository.UpdateArticleTags(article, tags);
