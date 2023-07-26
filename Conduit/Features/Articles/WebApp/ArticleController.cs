@@ -12,10 +12,12 @@ namespace Conduit.Features.Articles.WebApp
         {
 
         private readonly Create _create;
+        private readonly SetTagsForArticles _setTagsForArticles;
 
-        public ArticleController(Create create)
+        public ArticleController(Create create, SetTagsForArticles setTagsForArticles)
         {
             _create = create;
+            _setTagsForArticles = setTagsForArticles;
         }
 
             [HttpPost("articles"), Authorize]
@@ -35,9 +37,10 @@ namespace Conduit.Features.Articles.WebApp
         //}
 
         [HttpPost("articles/tags")]
-        public async Task<IActionResult> Put(List<string> tags)
+        public async Task<IActionResult> Put(SetTagsFroArticlesCommand command)
         {
-            return Ok();
+            var res = _setTagsForArticles.Handle(command);
+            return Ok(res);
         }
     }
 }

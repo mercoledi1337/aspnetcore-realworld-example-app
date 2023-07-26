@@ -2,9 +2,9 @@
 
 namespace Conduit.Features.Articles.Application.Interfaces
 {
-    public interface IArticleRepository
+    public interface IArticlesRepository
     {
         public Article GetArticle(int id);
-        public Task Updatearticle(Article article);
+        public Task UpdateArticle(Article article);
     }
 }

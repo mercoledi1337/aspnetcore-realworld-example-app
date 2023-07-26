@@ -1,4 +1,6 @@
 using Conduit.Features.Articles.Application.Commands;
+using Conduit.Features.Articles.Application.Interfaces;
+using Conduit.Features.Articles.Application.Repos;
 using Conduit.Features.MIddleware;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.DataAccess;
@@ -23,6 +25,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddScoped<IPasswordHash, PasswordHash>();
 builder.Services.AddScoped<Create>();
+builder.Services.AddScoped<SetTagsForArticles>();
+builder.Services.AddScoped<IArticlesRepository, ArticlesRepository>();
 builder.Services.AddScoped<IJwtToken, JwtToken>();
 //Add services to the container.
 builder.Services.AddCors(options =>

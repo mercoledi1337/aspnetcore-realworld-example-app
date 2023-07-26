@@ -1,6 +1,8 @@
-﻿using Conduit.Infrastructure;
+﻿using Conduit.Features.Articles.Application.Commands;
+using Conduit.Infrastructure;
 using Conduit.Infrastructure.Security;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 using static Conduit.Features.Articles.Application.Commands.Create;
 
@@ -40,6 +42,12 @@ namespace Conduit.Entities
         {
         }
 
+        public void SetTags(List<string> tags)
+        {
+            if (TagList.Count + tags.Count > 10)
+                throw new ArgumentException("too much tags");
+            TagList.AddRange(tags.Except(TagList));
+        }
         public static Article CreateArticle(ArticleCreateRequest request, Person autor)
         {
             Article article = new(request, autor);
