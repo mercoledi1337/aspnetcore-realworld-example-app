@@ -22,12 +22,12 @@ namespace Conduit.Infrastructure.DataAccess
 
             modelBuilder.Entity<ArticleTag>()
                 .HasOne(a => a.Article)
-                .WithMany(t => t.ArticleTags)
-                .HasForeignKey(t => t.ArticleId);
+                .WithMany(t => t!.ArticleTags)
+                .HasForeignKey(a => a.ArticleId);
 
             modelBuilder.Entity<ArticleTag>()
                 .HasOne(t => t.Tag)
-                .WithMany(a => a.ArticleTags)
+                .WithMany(a => a!.ArticleTags)
                 .HasForeignKey(t => t.TagId);
         }
     }

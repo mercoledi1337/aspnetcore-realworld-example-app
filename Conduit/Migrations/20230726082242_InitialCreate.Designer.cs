@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Conduit.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230724134401_InitialCreate")]
+    [Migration("20230726082242_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,11 +27,11 @@ namespace Conduit.Migrations
 
             modelBuilder.Entity("Conduit.Entities.Article", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ArticleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ArticleId"));
 
                     b.Property<int?>("AuthorId")
                         .HasColumnType("int");
@@ -60,7 +60,7 @@ namespace Conduit.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.HasKey("ArticleId");
 
                     b.HasIndex("AuthorId");
 

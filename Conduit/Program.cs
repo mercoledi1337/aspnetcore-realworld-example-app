@@ -24,6 +24,7 @@ builder.Services.AddSingleton(authenticationSettings);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddScoped<IPasswordHash, PasswordHash>();
+builder.Services.AddScoped<ITagsRepository, TagsRepository>();
 builder.Services.AddScoped<Create>();
 builder.Services.AddScoped<SetTagsForArticles>();
 builder.Services.AddScoped<IArticlesRepository, ArticlesRepository>();

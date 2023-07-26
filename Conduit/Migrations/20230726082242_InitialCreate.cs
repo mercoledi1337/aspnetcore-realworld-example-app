@@ -48,7 +48,7 @@ namespace Conduit.Migrations
                 name: "Articles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ArticleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Slug = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -62,7 +62,7 @@ namespace Conduit.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Articles", x => x.Id);
+                    table.PrimaryKey("PK_Articles", x => x.ArticleId);
                     table.ForeignKey(
                         name: "FK_Articles_Persons_AuthorId",
                         column: x => x.AuthorId,
@@ -84,7 +84,7 @@ namespace Conduit.Migrations
                         name: "FK_ArticleTags_Articles_ArticleId",
                         column: x => x.ArticleId,
                         principalTable: "Articles",
-                        principalColumn: "Id",
+                        principalColumn: "ArticleId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ArticleTags_Tags_TagId",

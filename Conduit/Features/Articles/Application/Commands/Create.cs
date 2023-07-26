@@ -33,13 +33,18 @@ namespace Conduit.Features.Articles.Application.Commands
 
         private async Task<bool> CheckTitile(string title)
         {
-            var res = await _context.Articles.FirstAsync(x => x.Title == title);
-            return (res != null);
+            try
+            {
+                var res = await _context.Articles.FirstAsync(x => x.Title == title);
+                return (res == null);
+            } catch
+            { 
+            return false;
+           }
         }
 
         private async Task<ArticleEnvelope> CreateArticle(ArticleCreateRequest request, Person person, List<Tag> tags)
         {
-            
             Article article = Article.CreateArticle(request, person);
 
             await _context.Articles.AddAsync(article);
@@ -84,5 +89,7 @@ namespace Conduit.Features.Articles.Application.Commands
 
                 return await CreateArticle(request, person, tags);
             }
+        // w samym obiekcie article zmieniamy tagi, tam jest sprawdzany obecny obiekt pobrany z bazy i w tedy jak zmienimy w obiekcie 
+        // i przejdzie walidacje zapisujemy go
         }
     }

@@ -24,11 +24,11 @@ namespace Conduit.Migrations
 
             modelBuilder.Entity("Conduit.Entities.Article", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ArticleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ArticleId"));
 
                     b.Property<int?>("AuthorId")
                         .HasColumnType("int");
@@ -57,7 +57,7 @@ namespace Conduit.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.HasKey("ArticleId");
 
                     b.HasIndex("AuthorId");
 

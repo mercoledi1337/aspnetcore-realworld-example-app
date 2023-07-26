@@ -12,7 +12,7 @@ namespace Conduit.Features.Articles.Application.Repos
         {
             _context = context;
         }
-        public Article GetArticle(int id) => _context.Articles.FirstOrDefault(a => a.Id == id);
+        public Article GetArticle(int id) => _context.Articles.FirstOrDefault(a => a.ArticleId == id);
         public Task UpdateArticle(Article article) => _context.SaveChangesAsync();
 
     }
