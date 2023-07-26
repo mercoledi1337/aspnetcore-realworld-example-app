@@ -29,6 +29,7 @@ namespace Conduit.Features.Articles.Application.Commands
             var article = _articlesRepository.GetArticle(command.Article);
             //nie mogę wyciągnąć z artykułów jego tagów
             var currentTags = _tagsRepository.GetArticleTag(command.Article);
+            //chcemy wrzucić do encji i potem po przejściu validacji jej użyć
             article.SetTags(command.Tags);
             //sprawdzić czy tagi są w użyciu
             var tags = new List<Tag>();
