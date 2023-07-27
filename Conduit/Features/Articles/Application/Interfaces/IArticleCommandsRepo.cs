@@ -7,6 +7,7 @@ namespace Conduit.Features.Articles.Application.Interfaces
         public Task<Article> Get(Guid id);
         public Task Update(Article article);
         public Task Add(Article article);
+        public Task<bool> IsInUse(string title);
 
     }
 }

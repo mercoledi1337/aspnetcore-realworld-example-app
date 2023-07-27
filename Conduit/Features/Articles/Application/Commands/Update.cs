@@ -4,10 +4,10 @@ using Conduit.Features.Articles.Application.Interfaces;
 
 namespace Conduit.Features.Articles.Application.Commands
 {
-    public class Create
+    public class Update
     {
 
-        public class ArticleCreateRequest
+        public class ArticleUpdateRequest
         {
             public string? title { get; set; }
             public string? description { get; set; }
@@ -15,22 +15,25 @@ namespace Conduit.Features.Articles.Application.Commands
             public List<string>? tagList { get; set; }
         }
 
-        public record ArticleCreateEnvelope(ArticleCreateRequest article);
+        public record ArticleUpdateEnvelope(ArticleUpdateRequest article);
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPersonRepository _personRepository;
         private readonly IArticleCommandsRepo _articleCommandsRepo;
         private readonly ITagsQueries _tagsQueries;
+        private readonly IArticleQueriesRepo _articleQueriesRepo;
 
-        public Create(IHttpContextAccessor httpContextAccessor
-            ,IPersonRepository personRepository
-            ,IArticleCommandsRepo articleCommandsRepo
-            ,ITagsQueries tagsQueries)
+        public Update(IHttpContextAccessor httpContextAccessor
+            , IPersonRepository personRepository
+            , IArticleCommandsRepo articleCommandsRepo
+            , ITagsQueries tagsQueries
+            , IArticleQueriesRepo articleQueriesRepo)
         {
             _httpContextAccessor = httpContextAccessor;
             _personRepository = personRepository;
             _articleCommandsRepo = articleCommandsRepo;
             _tagsQueries = tagsQueries;
+            _articleQueriesRepo = articleQueriesRepo;
         }
 
 
@@ -64,21 +67,19 @@ namespace Conduit.Features.Articles.Application.Commands
             }
             return result;
         }
-        public async Task<ArticleEnvelope> CreateArticle(ArticleCreateRequest request, List<string> tags)
-            {
-                
+        public async Task<ArticleEnvelope> UpdateArticle(Create.ArticleCreateRequest request, List<string> tags)
+        {
+
             var sub = _httpContextAccessor.HttpContext?.User.FindFirst(type: "sud")?.Value;
 
             Person person = await _personRepository.GetPerson(sub);
-            Article article = Article.Create();
+            var article = await _articleQueriesRepo.Get(request.title);
             article.SetArticleDetails(request, person);
             var tagsTmp = await CheckTags(tags);
             article.SetTags(tagsTmp);
-            if (await _articleCommandsRepo.IsInUse(article.Title))
-                throw new ArgumentException("title in use");
-            await _articleCommandsRepo.Add(article);
-            
+            await _articleCommandsRepo.Update(article);
+
             return new ArticleEnvelope(article);
-            }
         }
     }
+}

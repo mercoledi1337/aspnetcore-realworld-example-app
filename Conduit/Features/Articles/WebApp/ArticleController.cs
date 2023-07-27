@@ -2,6 +2,8 @@
 using Conduit.Features.Articles.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static Conduit.Features.Articles.Application.Commands.Create;
+using static Conduit.Features.Articles.Application.Commands.Update;
 
 namespace Conduit.Features.Articles.WebApp
 {
@@ -12,15 +14,17 @@ namespace Conduit.Features.Articles.WebApp
 
         private readonly Create _create;
         private readonly IArticleQueriesRepo _articleQueriesRepo;
+        private readonly Update _update;
 
-        public ArticleController(Create create, IArticleQueriesRepo articleQueriesRepo)
+        public ArticleController(Create create, IArticleQueriesRepo articleQueriesRepo, Update update)
         {
             _create = create;
             _articleQueriesRepo = articleQueriesRepo;
+            _update = update;
         }
 
             [HttpPost("articles"), Authorize]
-            public async Task<IActionResult> Create([FromBody] Create.ArticleCreateEnvelope article, CancellationToken cancellationToken = default)
+            public async Task<IActionResult> Create([FromBody] ArticleCreateEnvelope article, CancellationToken cancellationToken = default)
             {
             var result = await _create.CreateArticle(article.article, article.article.tagList);
 
@@ -35,11 +39,11 @@ namespace Conduit.Features.Articles.WebApp
             return Ok(result);
         }
 
-        //[HttpPut("articles/tags")]
-        //public async Task<IActionResult> Put(SetTagsFroArticlesCommand command)
-        //{
-        //    await _setTagsForArticles.Handle(command);
-        //    return Ok("ok");
-        //}
+        [HttpPut("articles/tags"), Authorize]
+        public async Task<IActionResult> Put([FromBody] ArticleCreateEnvelope article)
+        {
+            await _update.UpdateArticle(article.article, article.article.tagList);
+            return Ok("ok");
+        }
     }
 }

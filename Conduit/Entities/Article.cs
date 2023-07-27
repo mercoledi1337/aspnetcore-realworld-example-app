@@ -23,7 +23,7 @@ namespace Conduit.Entities
         public bool? Favorited { get; private set; }
         public int FavoriteCount { get; private set; }
         private ICollection<Tag> _tags = new List<Tag>();
-        public IEnumerable<Tag> Tags => _tags.ToList().AsReadOnly();
+        public IEnumerable<Tag> Tags => _tags;
         //stowrzyć komentarze
         //public List<Comment> Comments { get; private set; }
         public DateTime CreatedAt { get; private set; }

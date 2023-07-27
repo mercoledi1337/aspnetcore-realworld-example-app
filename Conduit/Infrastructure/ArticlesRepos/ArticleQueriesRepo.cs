@@ -1,4 +1,5 @@
-﻿using Conduit.Features.Articles.Application.Interfaces;
+﻿using Conduit.Entities;
+using Conduit.Features.Articles.Application.Interfaces;
 using Conduit.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,5 +27,9 @@ namespace Conduit.Infrastructure.ArticlesRepos
                 .ToListAsync();
             return articles;
         }
+
+        public async Task<Article> Get(string title) => await _ctxt.Articles.FirstOrDefaultAsync(x => x.Title == title);
+
+
     }
 }
