@@ -27,10 +27,9 @@ namespace Conduit.Features.MIddleware
             private async Task HandleExceptionAsync(HttpContext context, ArgumentException ex)
             {
                     var code = HttpStatusCode.BadRequest;
-                    var result = JsonSerializer.Serialize(new { error = ex.Message });
                     context.Response.ContentType = "application/json";
                     context.Response.StatusCode = (int)code;
-                    await context.Response.WriteAsync(result);
+                    await context.Response.WriteAsJsonAsync(new { error = ex.Message });
             }
         }
 }

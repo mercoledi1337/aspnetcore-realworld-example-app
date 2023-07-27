@@ -9,26 +9,13 @@ namespace Conduit.Infrastructure.DataAccess
         {
 
         }
-
-        public DbSet<Person> Persons { get; set; } = null!;
-        public DbSet<Article> Articles { get; set; } = null!;
-        public DbSet<ArticleTag> ArticleTags { get; set; } = null!;
-        public DbSet<Tag> Tags { get; set; } = null!;
-
+        public DbSet<Article> Articles { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<Person> Persons { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ArticleTag>()
-                .HasKey(at => new { at.ArticleId, at.TagId });
-
-            modelBuilder.Entity<ArticleTag>()
-                .HasOne(a => a.Article)
-                .WithMany(t => t!.ArticleTags)
-                .HasForeignKey(a => a.ArticleId);
-
-            modelBuilder.Entity<ArticleTag>()
-                .HasOne(t => t.Tag)
-                .WithMany(a => a!.ArticleTags)
-                .HasForeignKey(t => t.TagId);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

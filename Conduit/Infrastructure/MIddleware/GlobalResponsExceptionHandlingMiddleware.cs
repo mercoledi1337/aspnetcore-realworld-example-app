@@ -30,10 +30,9 @@ namespace Conduit.Features.MIddleware
             if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
             {
                 var code = HttpStatusCode.Unauthorized;
-                var result = JsonSerializer.Serialize(new { error = "Unauthorized" });
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)code;
-                await context.Response.WriteAsync(result);
+                await context.Response.WriteAsJsonAsync(new { error = "Unauthorized" });
 
             }
         }

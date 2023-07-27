@@ -1,9 +1,10 @@
 using Conduit.Features.Articles.Application.Commands;
 using Conduit.Features.Articles.Application.Interfaces;
-using Conduit.Features.Articles.Application.Repos;
 using Conduit.Features.MIddleware;
 using Conduit.Infrastructure;
+using Conduit.Infrastructure.ArticlesRepos;
 using Conduit.Infrastructure.DataAccess;
+using Conduit.Infrastructure.Repos;
 using Conduit.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -24,12 +25,15 @@ builder.Services.AddSingleton(authenticationSettings);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddScoped<IPasswordHash, PasswordHash>();
-builder.Services.AddScoped<ITagsRepository, TagsRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<Create>();
-builder.Services.AddScoped<SetTagsForArticles>();
-builder.Services.AddScoped<IArticlesRepository, ArticlesRepository>();
+builder.Services.AddScoped<IArticleCommandsRepo, ArticleCommandsRepo>();
+builder.Services.AddScoped<IArticleQueriesRepo, ArticleQueriesRepo>();
+
+
+
 builder.Services.AddScoped<IJwtToken, JwtToken>();
+
 //Add services to the container.
 builder.Services.AddCors(options =>
 {
@@ -44,6 +48,7 @@ var connectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONN
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"));
+
 });
 
 //builder.Services.AddDefaultIdentity<Profile>(options => options.SignIn.RequireConfirmedAccount = false)

@@ -10,12 +10,10 @@ namespace Conduit.Features.Articles.Application.Queries
 
         public class QueryHandler : IRequestHandler<Query, ArticlesEnvelope>
         {
-            private readonly DataContext _context;
             private readonly IHttpContextAccessor _httpContextAccessor;
 
-            public QueryHandler(DataContext context, IHttpContextAccessor httpContextAccessor)
+            public QueryHandler(IHttpContextAccessor httpContextAccessor)
             {
-                _context = context;
                 _httpContextAccessor = httpContextAccessor;
             }
             public Task<ArticlesEnvelope> Handle(Query request, CancellationToken cancellationToken)

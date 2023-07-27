@@ -12,75 +12,67 @@ namespace Conduit.Features.Articles.Application.Commands
             public string? title { get; set; }
             public string? description { get; set; }
             public string? body { get; set; }
-            public string[]? tagList { get; set; }
+            public List<Tag>? tagList { get; set; }
         }
 
         public record ArticleCreateEnvelope(ArticleCreateRequest article);
 
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IArticlesRepository _articlesRepository;
-        private readonly ITagsRepository _tagsRepository;
         private readonly IPersonRepository _personRepository;
+        private readonly IArticleCommandsRepo _articleCommandsRepo;
 
         public Create(IHttpContextAccessor httpContextAccessor
-            ,IArticlesRepository articlesRepository
-            ,ITagsRepository tagsRepository
-            ,IPersonRepository personRepository)
+            ,IPersonRepository personRepository
+            ,IArticleCommandsRepo articleCommandsRepo)
         {
             _httpContextAccessor = httpContextAccessor;
-            _articlesRepository = articlesRepository;
-            _tagsRepository = tagsRepository;
+
             _personRepository = personRepository;
+            _articleCommandsRepo = articleCommandsRepo;
         }
-        private async Task<bool> CheckTitile(string title)
-        {
-            try
-            {
-                var res = _articlesRepository.CheckTitle(title);
-                return (res == null);
-            } catch
-            { 
-            return false;
-           }
-        }
+        
 
-        private async Task<ArticleEnvelope> CreateArticle(ArticleCreateRequest request, Person person, List<Tag> tags)
-        {
-            Article article = Article.CreateArticle(request, person);
+        //private async Task<ArticleEnvelope> CreateArticle(ArticleCreateRequest request, Person person, List<Tag> tags)
+        //{
+        //    Article article = Article.CreateArticle(request, person);
 
-            await _articlesRepository.AddArticle(article);
-            await _articlesRepository.AddArticleTag(article, tags);
-            return new ArticleEnvelope(article);
-        }
+        //    await _articlesRepository.AddArticle(article);
+        //    await _articlesRepository.AddArticleTag(article, tags);
+        //    return new ArticleEnvelope(article);
+        //}
 
-            public async Task<ArticleEnvelope> CreateArticle(ArticleCreateRequest request)
+            public async Task<ArticleEnvelope> CreateArticle(ArticleCreateRequest request, List<Tag> tags)
             {
                 
             var sub = _httpContextAccessor.HttpContext?.User.FindFirst(type: "sud")?.Value;
 
-            if (await CheckTitile(request.title)) 
-            {
-                throw new ArgumentException("Title is already in use");
-            }
-
-            var tags = new List<Tag>();
-            foreach (var tag in (request.tagList ?? Enumerable.Empty<string>()))
-            {
-                var t = _tagsRepository.GetTag(tag);
-                if (t == null)
-                {
-                    t = new Tag()
-                    {
-                        TagId = tag
-                    };
-                    _tagsRepository.UpdateTags(t);
-                }
-                tags.Add(t);
-            }
-
             Person person = await _personRepository.GetPerson(sub);
+            Article article = Article.Create();
+            article.SetArticleDetails(request, person);
+            article.SetTags(tags);
+            await _articleCommandsRepo.Add(article);
+            //if (await CheckTitile(request.title)) 
+            //{
+            //    throw new ArgumentException("Title is already in use");
+            //}
 
-            return await CreateArticle(request, person, tags);
+            //var tags = new List<Tag>();
+            //foreach (var tag in (request.tagList ?? Enumerable.Empty<string>()))
+            //{
+            //    var t = await _tagsRepository.GetTag(tag);
+            //    if (t == null)
+            //    {
+            //        t = new Tag()
+            //        {
+            //            TagId = tag
+            //        };
+            //        await _tagsRepository.UpdateTags(t);
+            //    }
+            //    tags.Add(t);
+            //}
+
+
+            return new ArticleEnvelope(article);
             }
         // w samym obiekcie article zmieniamy tagi, tam jest sprawdzany obecny obiekt pobrany z bazy i w tedy jak zmienimy w obiekcie 
         // i przejdzie walidacje zapisujemy go

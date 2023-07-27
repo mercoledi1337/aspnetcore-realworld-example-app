@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Conduit.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230726082242_InitialCreate")]
+    [Migration("20230727083759_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,18 +25,32 @@ namespace Conduit.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ArticleTag", b =>
+                {
+                    b.Property<Guid>("ArticlesArticleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TagsTagId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ArticlesArticleId", "TagsTagId");
+
+                    b.HasIndex("TagsTagId");
+
+                    b.ToTable("ArticleTags", (string)null);
+                });
+
             modelBuilder.Entity("Conduit.Entities.Article", b =>
                 {
-                    b.Property<int>("ArticleId")
+                    b.Property<Guid>("ArticleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ArticleId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("AuthorId")
                         .HasColumnType("int");
 
                     b.Property<string>("Body")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -55,6 +69,7 @@ namespace Conduit.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -64,22 +79,7 @@ namespace Conduit.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Articles");
-                });
-
-            modelBuilder.Entity("Conduit.Entities.ArticleTag", b =>
-                {
-                    b.Property<int>("ArticleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TagId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ArticleId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("ArticleTags");
+                    b.ToTable("Articles", (string)null);
                 });
 
             modelBuilder.Entity("Conduit.Entities.Person", b =>
@@ -129,12 +129,32 @@ namespace Conduit.Migrations
 
             modelBuilder.Entity("Conduit.Entities.Tag", b =>
                 {
-                    b.Property<string>("TagId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("TagId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TagId");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
+                });
+
+            modelBuilder.Entity("ArticleTag", b =>
+                {
+                    b.HasOne("Conduit.Entities.Article", null)
+                        .WithMany()
+                        .HasForeignKey("ArticlesArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Conduit.Entities.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsTagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Conduit.Entities.Article", b =>
@@ -144,35 +164,6 @@ namespace Conduit.Migrations
                         .HasForeignKey("AuthorId");
 
                     b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("Conduit.Entities.ArticleTag", b =>
-                {
-                    b.HasOne("Conduit.Entities.Article", "Article")
-                        .WithMany("ArticleTags")
-                        .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Conduit.Entities.Tag", "Tag")
-                        .WithMany("ArticleTags")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Article");
-
-                    b.Navigation("Tag");
-                });
-
-            modelBuilder.Entity("Conduit.Entities.Article", b =>
-                {
-                    b.Navigation("ArticleTags");
-                });
-
-            modelBuilder.Entity("Conduit.Entities.Tag", b =>
-                {
-                    b.Navigation("ArticleTags");
                 });
 #pragma warning restore 612, 618
         }

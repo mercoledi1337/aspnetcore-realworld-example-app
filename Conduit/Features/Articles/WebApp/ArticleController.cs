@@ -1,4 +1,5 @@
 ﻿using Conduit.Features.Articles.Application.Commands;
+using Conduit.Features.Articles.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,35 +11,35 @@ namespace Conduit.Features.Articles.WebApp
         {
 
         private readonly Create _create;
-        private readonly SetTagsForArticles _setTagsForArticles;
+        private readonly IArticleQueriesRepo _articleQueriesRepo;
 
-        public ArticleController(Create create, SetTagsForArticles setTagsForArticles)
+        public ArticleController(Create create, IArticleQueriesRepo articleQueriesRepo)
         {
             _create = create;
-            _setTagsForArticles = setTagsForArticles;
+            _articleQueriesRepo = articleQueriesRepo;
         }
 
             [HttpPost("articles"), Authorize]
             public async Task<IActionResult> Create([FromBody] Create.ArticleCreateEnvelope article, CancellationToken cancellationToken = default)
             {
-            var result = await _create.CreateArticle(article.article);
+            var result = await _create.CreateArticle(article.article, article.article.tagList);
 
-                return Ok(result);
+                return Ok();
             }
 
-        //[HttpGet("articles"), Authorize]
-        //public async Task<IActionResult> GetArticles([FromQuery] string tag , [FromQuery] string author, [FromQuery] string favorited, [FromQuery] int? limit, [FromQuery] int? offset, CancellationToken cancellationToken = default)
-        //{
-        //    var result = await _mediator.Send(, cancellationToken);
-
-        //    return Ok(result);
-        //}
-
-        [HttpPost("articles/tags")]
-        public async Task<IActionResult> Put(SetTagsFroArticlesCommand command)
+        [HttpGet("articles"), Authorize]
+        public async Task<IActionResult> GetArticles()
         {
-            var res = _setTagsForArticles.Handle(command);
-            return Ok(res);
+
+            var result = await _articleQueriesRepo.GetAll();
+            return Ok(result);
         }
+
+        //[HttpPut("articles/tags")]
+        //public async Task<IActionResult> Put(SetTagsFroArticlesCommand command)
+        //{
+        //    await _setTagsForArticles.Handle(command);
+        //    return Ok("ok");
+        //}
     }
 }

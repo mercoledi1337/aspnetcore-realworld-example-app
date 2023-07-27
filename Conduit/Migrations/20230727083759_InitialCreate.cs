@@ -37,7 +37,8 @@ namespace Conduit.Migrations
                 name: "Tags",
                 columns: table => new
                 {
-                    TagId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    TagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,12 +49,11 @@ namespace Conduit.Migrations
                 name: "Articles",
                 columns: table => new
                 {
-                    ArticleId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ArticleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Slug = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Body = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Body = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AuthorId = table.Column<int>(type: "int", nullable: true),
                     Favorited = table.Column<bool>(type: "bit", nullable: true),
                     FavoriteCount = table.Column<int>(type: "int", nullable: false),
@@ -74,21 +74,21 @@ namespace Conduit.Migrations
                 name: "ArticleTags",
                 columns: table => new
                 {
-                    TagId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ArticleId = table.Column<int>(type: "int", nullable: false)
+                    ArticlesArticleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TagsTagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArticleTags", x => new { x.ArticleId, x.TagId });
+                    table.PrimaryKey("PK_ArticleTags", x => new { x.ArticlesArticleId, x.TagsTagId });
                     table.ForeignKey(
-                        name: "FK_ArticleTags_Articles_ArticleId",
-                        column: x => x.ArticleId,
+                        name: "FK_ArticleTags_Articles_ArticlesArticleId",
+                        column: x => x.ArticlesArticleId,
                         principalTable: "Articles",
                         principalColumn: "ArticleId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ArticleTags_Tags_TagId",
-                        column: x => x.TagId,
+                        name: "FK_ArticleTags_Tags_TagsTagId",
+                        column: x => x.TagsTagId,
                         principalTable: "Tags",
                         principalColumn: "TagId",
                         onDelete: ReferentialAction.Cascade);
@@ -100,9 +100,9 @@ namespace Conduit.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArticleTags_TagId",
+                name: "IX_ArticleTags_TagsTagId",
                 table: "ArticleTags",
-                column: "TagId");
+                column: "TagsTagId");
         }
 
         /// <inheritdoc />
