@@ -28,7 +28,7 @@ namespace Conduit.Infrastructure.ArticlesRepos
             return articles;
         }
 
-        public async Task<Article> Get(string title) => await _ctxt.Articles.FirstOrDefaultAsync(x => x.Title == title);
+        public async Task<Article> Get(string title) => await _ctxt.Articles.Include(x => x.Tags).FirstOrDefaultAsync(x => x.Title == title);
 
 
     }

@@ -15,6 +15,12 @@ namespace Conduit.Features.Articles.Application.Commands
             public List<string>? tagList { get; set; }
         }
 
+        public class ArticleDeleteRequest
+        {
+            public string? title { get; set; }
+            public Tag tag { get; set; }
+        }
+
         public record ArticleUpdateEnvelope(ArticleUpdateRequest article);
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -79,6 +85,17 @@ namespace Conduit.Features.Articles.Application.Commands
             article.SetTags(tagsTmp);
             await _articleCommandsRepo.Update(article);
 
+            return new ArticleEnvelope(article);
+        }
+
+        public async Task<ArticleEnvelope> DelateArticle(ArticleDeleteRequest request, Tag tag)
+        {
+
+            var sub = _httpContextAccessor.HttpContext?.User.FindFirst(type: "sud")?.Value;
+
+            var article = await _articleQueriesRepo.Get(request.title);
+            article.DeleteTag(tag);
+            await _articleCommandsRepo.Delete(article);
             return new ArticleEnvelope(article);
         }
     }

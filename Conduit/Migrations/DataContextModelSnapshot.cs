@@ -22,7 +22,7 @@ namespace Conduit.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ArticleTag", b =>
+            modelBuilder.Entity("ArticleTags", b =>
                 {
                     b.Property<Guid>("ArticlesArticleId")
                         .HasColumnType("uniqueidentifier");
@@ -34,7 +34,7 @@ namespace Conduit.Migrations
 
                     b.HasIndex("TagsTagId");
 
-                    b.ToTable("ArticleTags", (string)null);
+                    b.ToTable("ArticleTags");
                 });
 
             modelBuilder.Entity("Conduit.Entities.Article", b =>
@@ -139,7 +139,7 @@ namespace Conduit.Migrations
                     b.ToTable("Tags", (string)null);
                 });
 
-            modelBuilder.Entity("ArticleTag", b =>
+            modelBuilder.Entity("ArticleTags", b =>
                 {
                     b.HasOne("Conduit.Entities.Article", null)
                         .WithMany()

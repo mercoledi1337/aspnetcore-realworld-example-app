@@ -4,6 +4,7 @@ using Conduit.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 
+
 public class ArticleCommandsRepo : IArticleCommandsRepo
 {
     private readonly DataContext _ctxt;
@@ -19,9 +20,17 @@ public class ArticleCommandsRepo : IArticleCommandsRepo
 
     public async Task Update(Article article)
     {
+        var tmp = _ctxt.Articles.Include(x => x.Tags).FirstOrDefault(a => a.Title == article.Title);
+
         foreach (var tag in article.Tags)
             _ctxt.Tags.Attach(tag);
         _ctxt.Articles.Update(article); //sprawdzić czy nie trzeba ręcznie dodać tagsów
+        await _ctxt.SaveChangesAsync();
+    }
+
+    public async Task Delete(Article article)
+    {
+        _ctxt.Articles.Update(article);
         await _ctxt.SaveChangesAsync();
     }
 

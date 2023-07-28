@@ -45,5 +45,13 @@ namespace Conduit.Features.Articles.WebApp
             await _update.UpdateArticle(article.article, article.article.tagList);
             return Ok("ok");
         }
+
+
+        [HttpDelete("articles/tags"), Authorize]
+        public async Task<IActionResult> Delate([FromBody] ArticleDeleteRequest article)
+        {
+            await _update.DelateArticle(article, article.tag);
+            return Ok("ok");
+        }
     }
 }

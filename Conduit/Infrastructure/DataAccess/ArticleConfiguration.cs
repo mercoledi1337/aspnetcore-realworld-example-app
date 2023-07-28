@@ -16,7 +16,7 @@ namespace Conduit.Infrastructure.DataAccess
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
             builder.HasMany(a => a.Tags)
                 .WithMany(t => t.Articles)
-                .UsingEntity(j => j.ToTable("ArticleTags"));
+                .UsingEntity("ArticleTags");
         }
     }
 

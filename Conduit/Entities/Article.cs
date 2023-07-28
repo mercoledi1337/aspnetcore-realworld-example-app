@@ -49,13 +49,17 @@ namespace Conduit.Entities
 
         public void SetTags(List<Tag> tags)
         {
-            if (tags.Count() > 10)
+            if (tags.Count() + _tags.Count > 10)
                 throw new ArgumentException("too much tags");
             _tags.Clear();
             foreach (var tag in tags)
             {
                 _tags.Add(tag);
             }
+        }
+        public void DeleteTag(Tag tag)
+        {
+            _tags.Remove(_tags.Single(x => x.Name == tag.Name));
         }
 
         public static Article Create()
