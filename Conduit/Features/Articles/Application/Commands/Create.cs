@@ -32,8 +32,6 @@ namespace Conduit.Features.Articles.Application.Commands
             _articleCommandsRepo = articleCommandsRepo;
             _tagsQueries = tagsQueries;
         }
-
-
         //private async Task<ArticleEnvelope> CreateArticle(ArticleCreateRequest request, Person person, List<Tag> tags)
         //{
         //    Article article = Article.CreateArticle(request, person);
@@ -70,7 +68,7 @@ namespace Conduit.Features.Articles.Application.Commands
             var sub = _httpContextAccessor.HttpContext?.User.FindFirst(type: "sud")?.Value;
 
             Person person = await _personRepository.GetPerson(sub);
-            Article article = Article.Create();
+            Article article = Article.Create(person);
             article.SetArticleDetails(request, person);
             var tagsTmp = await CheckTags(tags);
             article.SetTags(tagsTmp);

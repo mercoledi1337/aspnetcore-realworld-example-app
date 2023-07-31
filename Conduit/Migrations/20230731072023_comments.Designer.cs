@@ -4,6 +4,7 @@ using Conduit.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Conduit.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230731072023_comments")]
+    partial class comments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace Conduit.Migrations
 
                     b.HasIndex("TagsTagId");
 
-                    b.ToTable("ArticleTags", (string)null);
+                    b.ToTable("ArticleTags");
                 });
 
             modelBuilder.Entity("Conduit.Entities.Article", b =>
@@ -121,7 +124,7 @@ namespace Conduit.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Persons", (string)null);
+                    b.ToTable("Persons");
                 });
 
             modelBuilder.Entity("Conduit.Entities.Tag", b =>
@@ -160,7 +163,7 @@ namespace Conduit.Migrations
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
-                    b.OwnsMany("Conduit.Entities.Article.Comments#Conduit.Entities.Comment", "Comments", b1 =>
+                    b.OwnsMany("Conduit.Entities.Comment", "Comments", b1 =>
                         {
                             b1.Property<Guid>("CommentId")
                                 .ValueGeneratedOnAdd()
@@ -188,7 +191,7 @@ namespace Conduit.Migrations
 
                             b1.HasIndex("AuthorId");
 
-                            b1.ToTable("Comment", (string)null);
+                            b1.ToTable("Comment");
 
                             b1.WithOwner()
                                 .HasForeignKey("ArticleId");

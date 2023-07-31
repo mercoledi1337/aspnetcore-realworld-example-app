@@ -27,6 +27,12 @@ public class ArticleCommandsRepo : IArticleCommandsRepo
         _ctxt.Articles.Update(article); //sprawdzić czy nie trzeba ręcznie dodać tagsów
         await _ctxt.SaveChangesAsync();
     }
+    //zobaczyć czy trzeba include
+    public async Task UpdateWithComments(Article article)
+    {
+        _ctxt.Articles.Update(article);
+        await _ctxt.SaveChangesAsync();
+    }
 
     public async Task Delete(Article article)
     {
@@ -40,6 +46,7 @@ public class ArticleCommandsRepo : IArticleCommandsRepo
     {
         foreach(var tag in article.Tags) 
             _ctxt.Tags.Attach(tag);
+
 
         await _ctxt.Articles.AddAsync(article); //sprawdzić czy nie trzeba ręcznie dodać tagsów
         await _ctxt.SaveChangesAsync();

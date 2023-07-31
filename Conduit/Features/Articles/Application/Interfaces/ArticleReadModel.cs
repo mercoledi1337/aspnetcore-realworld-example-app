@@ -1,5 +1,4 @@
-﻿using Conduit.Entities;
-
+﻿
 namespace Conduit.Features.Articles.Application.Interfaces
 {
     public class ArticleReadModel
@@ -8,5 +7,6 @@ namespace Conduit.Features.Articles.Application.Interfaces
         public string Title { get; set; }
         public string Body { get; set; }
         public IEnumerable<string> Tags { get; set; }
+        public IEnumerable<string> Comments { get; set; }
     }
 }

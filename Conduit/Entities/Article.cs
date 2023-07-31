@@ -1,10 +1,4 @@
-﻿using Conduit.Features.Articles.Application.Commands;
-using Conduit.Infrastructure;
-using Conduit.Infrastructure.Security;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
+﻿using Conduit.Infrastructure;
 using System.Text.Json.Serialization;
 using static Conduit.Features.Articles.Application.Commands.Create;
 
@@ -24,8 +18,7 @@ namespace Conduit.Entities
         public int FavoriteCount { get; private set; }
         private ICollection<Tag> _tags = new List<Tag>();
         public IEnumerable<Tag> Tags => _tags;
-        //stowrzyć komentarze
-        //public List<Comment> Comments { get; private set; }
+        public ICollection<Comment> Comments { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
         public void SetArticleDetails(ArticleCreateRequest request, Person autor)
@@ -38,9 +31,10 @@ namespace Conduit.Entities
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
         }
-        private Article(Guid id)
+        private Article(Guid id, List<Comment> comments)
         {
             ArticleId = id;
+            Comments = comments;
         }
 
         private Article()
@@ -62,9 +56,31 @@ namespace Conduit.Entities
             _tags.Remove(_tags.Single(x => x.Name == tag.Name));
         }
 
-        public static Article Create()
+        public void DeleteComment(Guid commentId)
+        {
+            Comments.Remove(Comments.Single(x => x.CommentId == commentId));
+        }
+
+        public void UpdateWithComments(string body)
+        {
+            foreach (var com in Comments)
             {
-                return new Article(Guid.NewGuid());
+                com.UpdateBody(com.Body + " updated");
+            }
+            Body = body;
+        }
+        public static Article Create(Person author)
+            {
+                var comments = new List<Comment>();
+            for (int i = 0; i < 2; i++)
+            {
+                Comment tmp = Comment.Create(author);
+                string tmpComment = "test" + i.ToString();
+                tmp.UpdateBody(tmpComment);
+                comments.Add(tmp);
+            }
+            
+                return new Article(Guid.NewGuid(), comments);
             }
     }
 }

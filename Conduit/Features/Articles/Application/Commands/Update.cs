@@ -14,7 +14,6 @@ namespace Conduit.Features.Articles.Application.Commands
             public string? body { get; set; }
             public List<string>? tagList { get; set; }
         }
-
         public class ArticleDeleteRequest
         {
             public string? title { get; set; }
@@ -73,7 +72,7 @@ namespace Conduit.Features.Articles.Application.Commands
             }
             return result;
         }
-        public async Task<ArticleEnvelope> UpdateArticle(Create.ArticleCreateRequest request, List<string> tags)
+        public async Task<ArticleEnvelope> UpdateTags(Create.ArticleCreateRequest request, List<string> tags)
         {
 
             var sub = _httpContextAccessor.HttpContext?.User.FindFirst(type: "sud")?.Value;
@@ -88,14 +87,13 @@ namespace Conduit.Features.Articles.Application.Commands
             return new ArticleEnvelope(article);
         }
 
-        public async Task<ArticleEnvelope> DelateArticle(ArticleDeleteRequest request, Tag tag)
+        public async Task<ArticleEnvelope> UpdateArticleWithComments(string articleName)
         {
-
             var sub = _httpContextAccessor.HttpContext?.User.FindFirst(type: "sud")?.Value;
 
-            var article = await _articleQueriesRepo.Get(request.title);
-            article.DeleteTag(tag);
-            await _articleCommandsRepo.Delete(article);
+            var article = await _articleQueriesRepo.Get(articleName);
+            article.UpdateWithComments("testowy Updated");
+            await _articleCommandsRepo.UpdateWithComments(article);
             return new ArticleEnvelope(article);
         }
     }

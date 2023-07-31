@@ -1,4 +1,5 @@
-﻿using Conduit.Features.Articles.Application.Commands;
+﻿using Conduit.Entities;
+using Conduit.Features.Articles.Application.Commands;
 using Conduit.Features.Articles.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,7 @@ namespace Conduit.Features.Articles.WebApp
         [HttpPut("articles/tags"), Authorize]
         public async Task<IActionResult> Put([FromBody] ArticleCreateEnvelope article)
         {
-            await _update.UpdateArticle(article.article, article.article.tagList);
+            await _update.UpdateTags(article.article, article.article.tagList);
             return Ok("ok");
         }
 
@@ -50,7 +51,22 @@ namespace Conduit.Features.Articles.WebApp
         [HttpDelete("articles/tags"), Authorize]
         public async Task<IActionResult> Delate([FromBody] ArticleDeleteRequest article)
         {
-            await _update.DelateArticle(article, article.tag);
+            await _update.DelateTag(article, article.tag);
+            return Ok("ok");
+        }
+
+        [HttpPut("articles/comments"), Authorize]
+
+        public async Task<IActionResult> Update(string title)
+        {
+            await _update.UpdateArticleWithComments(title);
+            return Ok("ok");
+        }
+
+        [HttpDelete("articles/comment"), Authorize]
+        public async Task<IActionResult> DelateComment(string title, Guid comment)
+        {
+            await _update.DelateComment(title, comment);
             return Ok("ok");
         }
     }

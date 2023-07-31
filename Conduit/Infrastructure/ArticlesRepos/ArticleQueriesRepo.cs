@@ -16,13 +16,15 @@ namespace Conduit.Infrastructure.ArticlesRepos
         {
             var articles = await _ctxt.Articles
                 .Include(a => a.Tags)
+                .Include(x => x.Comments)
                 .AsNoTracking()
                 .Select(a => new ArticleReadModel
                 {
                     ArticleId = a.ArticleId,
                     Title = a.Title,
                     Body = a.Body,
-                    Tags = a.Tags.Select(x => x.Name).ToList()
+                    Tags = a.Tags.Select(x => x.Name).ToList(),
+                    Comments = a.Comments.Select(x => x.Body).ToList()
                 })
                 .ToListAsync();
             return articles;

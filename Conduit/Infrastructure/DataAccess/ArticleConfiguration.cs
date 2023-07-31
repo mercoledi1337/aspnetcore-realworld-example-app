@@ -17,6 +17,13 @@ namespace Conduit.Infrastructure.DataAccess
             builder.HasMany(a => a.Tags)
                 .WithMany(t => t.Articles)
                 .UsingEntity("ArticleTags");
+            builder.OwnsMany(
+              x => x.Comments, x =>
+              {
+                  x.WithOwner().HasForeignKey("ArticleId");
+                  x.Property<Guid>("CommentId");
+                  x.HasKey("CommentId");
+              });
         }
     }
 

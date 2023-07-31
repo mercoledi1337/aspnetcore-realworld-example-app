@@ -12,10 +12,12 @@ namespace Conduit.Infrastructure.DataAccess
         public DbSet<Article> Articles { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Person> Persons { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
             base.OnModelCreating(modelBuilder);
+
         }
     }
 }
