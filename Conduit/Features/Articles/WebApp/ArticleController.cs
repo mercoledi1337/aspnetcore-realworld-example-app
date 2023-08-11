@@ -1,9 +1,11 @@
 ﻿using Conduit.Entities;
 using Conduit.Features.Articles.Application.Commands;
+using Conduit.Features.Articles.Application.Dto;
 using Conduit.Features.Articles.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Conduit.Features.Articles.Application.Commands.Create;
+using static Conduit.Features.Articles.Application.Commands.Delete;
 using static Conduit.Features.Articles.Application.Commands.Update;
 
 namespace Conduit.Features.Articles.WebApp
@@ -16,12 +18,21 @@ namespace Conduit.Features.Articles.WebApp
         private readonly Create _create;
         private readonly IArticleQueriesRepo _articleQueriesRepo;
         private readonly Update _update;
+        private readonly Delete _delete;
+        private readonly ITagsQueries _tagsQueries;
+        private readonly List _list;
 
-        public ArticleController(Create create, IArticleQueriesRepo articleQueriesRepo, Update update)
+        public ArticleController(Create create, IArticleQueriesRepo articleQueriesRepo
+            , Update update, Delete delete, ITagsQueries tagsQueries
+            , List list
+            )
         {
             _create = create;
             _articleQueriesRepo = articleQueriesRepo;
             _update = update;
+            _delete = delete;
+            _tagsQueries = tagsQueries;
+            _list = list;
         }
 
             [HttpPost("articles"), Authorize]
@@ -33,27 +44,23 @@ namespace Conduit.Features.Articles.WebApp
             }
 
         [HttpGet("articles"), Authorize]
-        public async Task<IActionResult> GetArticles()
+        public async Task<ArticlesEnvelope> GetArticles()
         {
 
-            var result = await _articleQueriesRepo.GetAll();
-            return Ok(result);
+            return new ArticlesEnvelope()
+            {
+                Articles = await _list.GetAll(),
+                //dodac liczenie artykułow
+                ArticlesCount = 3
+                };
         }
 
-        [HttpPut("articles/tags"), Authorize]
-        public async Task<IActionResult> Put([FromBody] ArticleCreateEnvelope article)
+        [HttpGet("articles/{slug}"), Authorize]
+        public async Task<ArticleEnvelope1> GetArticle(string slug)
         {
-            await _update.UpdateTags(article.article, article.article.tagList);
-            return Ok("ok");
+            return new ArticleEnvelope1(await _list.GetArticle(slug));
         }
 
-
-        [HttpDelete("articles/tags"), Authorize]
-        public async Task<IActionResult> Delate([FromBody] ArticleDeleteRequest article)
-        {
-            await _update.DelateTag(article, article.tag);
-            return Ok("ok");
-        }
 
         [HttpPut("articles/comments"), Authorize]
 
@@ -66,8 +73,27 @@ namespace Conduit.Features.Articles.WebApp
         [HttpDelete("articles/comment"), Authorize]
         public async Task<IActionResult> DelateComment(string title, Guid comment)
         {
-            await _update.DelateComment(title, comment);
+            await _delete.DelateComment(title, comment);
             return Ok("ok");
         }
+
+        [HttpGet("tags"), Authorize]
+        public async Task<TagsEnvelope> GetTags() => new TagsEnvelope(_tagsQueries.GetAll());
+
+
+        //[HttpPut("articles/tags"), Authorize]
+        //public async Task<IActionResult> Put([FromBody] ArticleCreateEnvelope article)
+        //{
+        //    await _update.UpdateTags(article.article, article.article.tagList);
+        //    return Ok("ok");
+        //}
+
+
+        //[HttpDelete("articles/tags"), Authorize]
+        //public async Task<IActionResult> Delate([FromBody] ArticleDeleteRequest article)
+        //{
+        //    await _delete.DelateTag(article, article.tag);
+        //    return Ok("ok");
+        //}
     }
 }

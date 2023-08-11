@@ -1,5 +1,4 @@
 ﻿using Conduit.Features.Articles.Application.Dto;
-using Conduit.Infrastructure.DataAccess;
 using MediatR;
 
 namespace Conduit.Features.Articles.Application.Queries

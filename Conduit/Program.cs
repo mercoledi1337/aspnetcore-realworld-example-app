@@ -29,6 +29,8 @@ builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<ITagsQueries, TagsQueries>();
 builder.Services.AddScoped<Create>();
 builder.Services.AddScoped<Update>();
+builder.Services.AddScoped<Delete>();
+builder.Services.AddScoped<List>();
 builder.Services.AddScoped<IArticleCommandsRepo, ArticleCommandsRepo>();
 builder.Services.AddScoped<IArticleQueriesRepo, ArticleQueriesRepo>();
 

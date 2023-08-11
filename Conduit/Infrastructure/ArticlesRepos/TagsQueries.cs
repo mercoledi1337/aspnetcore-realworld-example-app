@@ -14,5 +14,8 @@ namespace Conduit.Infrastructure.ArticlesRepos
             _context = dataContext;
         }
         public async Task<Tag> CheckTags(string name) => await _context.Tags.FirstOrDefaultAsync(x => x.Name == name);
+
+        public List<string> GetAll() => _context.Tags.Select(x => x.Name).ToList();
+
     }
 }

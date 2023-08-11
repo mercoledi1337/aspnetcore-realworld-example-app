@@ -45,8 +45,7 @@ namespace Conduit.Entities
             person.ChangeMail(mail);
             return person;
         }
-        //musi mieć ten obiek co aktualizuje plus hash/salt
-        // znaleźć tą osobe co chcemu update
+
         public void UpdatePerson(UserUpdateRequest user, byte[] hash, byte[] salt)
         {
             Image = user.Image;

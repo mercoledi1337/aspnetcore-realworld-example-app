@@ -6,18 +6,12 @@ namespace Conduit.Features.Articles.Application.Commands
 {
     public class Update
     {
-
         public class ArticleUpdateRequest
         {
             public string? title { get; set; }
             public string? description { get; set; }
             public string? body { get; set; }
             public List<string>? tagList { get; set; }
-        }
-        public class ArticleDeleteRequest
-        {
-            public string? title { get; set; }
-            public Tag tag { get; set; }
         }
 
         public record ArticleUpdateEnvelope(ArticleUpdateRequest article);

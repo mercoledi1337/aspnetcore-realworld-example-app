@@ -6,7 +6,6 @@ namespace Conduit.Features.Articles.Application.Commands
 {
     public class Create
     {
-
         public class ArticleCreateRequest
         {
             public string? title { get; set; }
@@ -14,7 +13,6 @@ namespace Conduit.Features.Articles.Application.Commands
             public string? body { get; set; }
             public List<string>? tagList { get; set; }
         }
-
         public record ArticleCreateEnvelope(ArticleCreateRequest article);
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -32,14 +30,6 @@ namespace Conduit.Features.Articles.Application.Commands
             _articleCommandsRepo = articleCommandsRepo;
             _tagsQueries = tagsQueries;
         }
-        //private async Task<ArticleEnvelope> CreateArticle(ArticleCreateRequest request, Person person, List<Tag> tags)
-        //{
-        //    Article article = Article.CreateArticle(request, person);
-
-        //    await _articlesRepository.AddArticle(article);
-        //    await _articlesRepository.AddArticleTag(article, tags);
-        //    return new ArticleEnvelope(article);
-        //}
 
         private async Task<List<Tag>> CheckTags(List<string> tags)
         {

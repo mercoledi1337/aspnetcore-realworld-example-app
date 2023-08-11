@@ -2,7 +2,6 @@
 using Conduit.Features.Articles.Application.Interfaces;
 using Conduit.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
 
 
 public class ArticleCommandsRepo : IArticleCommandsRepo
@@ -12,11 +11,8 @@ public class ArticleCommandsRepo : IArticleCommandsRepo
     {
         _ctxt = ctxt;
     }
-    public async Task<Article> Get(Guid id)
-    {
-        return await _ctxt.Articles.Include(a => a.Tags).
-            Where(x => x.ArticleId == id).FirstOrDefaultAsync();
-    }
+    public async Task<Article> Get(Guid id) => await _ctxt.Articles.Include(a => a.Tags)
+            .Where(x => x.ArticleId == id).FirstOrDefaultAsync();
 
     public async Task Update(Article article)
     {
@@ -24,10 +20,11 @@ public class ArticleCommandsRepo : IArticleCommandsRepo
 
         foreach (var tag in article.Tags)
             _ctxt.Tags.Attach(tag);
-        _ctxt.Articles.Update(article); //sprawdzić czy nie trzeba ręcznie dodać tagsów
+
+        _ctxt.Articles.Update(article);
         await _ctxt.SaveChangesAsync();
     }
-    //zobaczyć czy trzeba include
+
     public async Task UpdateWithComments(Article article)
     {
         _ctxt.Articles.Update(article);
@@ -47,8 +44,7 @@ public class ArticleCommandsRepo : IArticleCommandsRepo
         foreach(var tag in article.Tags) 
             _ctxt.Tags.Attach(tag);
 
-
-        await _ctxt.Articles.AddAsync(article); //sprawdzić czy nie trzeba ręcznie dodać tagsów
+        await _ctxt.Articles.AddAsync(article); 
         await _ctxt.SaveChangesAsync();
     }
 }

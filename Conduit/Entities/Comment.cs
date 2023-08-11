@@ -11,7 +11,7 @@ namespace Conduit.Entities
         public DateTime UpdatedAt { get; private set;}
         public string Body { get; private set;}
         public int AuthorId { get; private set; }
-        public Person Author { get; private set; } = null!;
+        public Person? Author { get; private set; } = null!;
 
         private Comment(Guid id, Person author)
         {
@@ -35,12 +35,5 @@ namespace Conduit.Entities
             Body = body;
             UpdatedAt = DateTime.UtcNow;
         }
-
-
-
-
-
     }
-
-
 }

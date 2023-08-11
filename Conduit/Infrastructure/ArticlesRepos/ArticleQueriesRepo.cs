@@ -1,5 +1,7 @@
 ﻿using Conduit.Entities;
 using Conduit.Features.Articles.Application.Interfaces;
+using Conduit.Features.Users.Application;
+using Conduit.Features.Users.Application.Dto;
 using Conduit.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,18 +22,62 @@ namespace Conduit.Infrastructure.ArticlesRepos
                 .AsNoTracking()
                 .Select(a => new ArticleReadModel
                 {
-                    ArticleId = a.ArticleId,
+                    Slug = a.Slug,
                     Title = a.Title,
+                    Description = a.Description,
                     Body = a.Body,
-                    Tags = a.Tags.Select(x => x.Name).ToList(),
-                    Comments = a.Comments.Select(x => x.Body).ToList()
+                    TagList = a.Tags.Select(x => x.Name).ToList(),
+                    CreatedAt = a.CreatedAt,
+                    UpdatedAt = a.UpdatedAt,
+                    author = new UserDto()
+                        { 
+                            Email = a.Author.Email,
+                            Username = a.Author.Username
+                        }
                 })
                 .ToListAsync();
-            return articles;
+
+            var result = articles
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip(0)
+                .Take(10)
+                .ToList();
+
+            return result;
+        }
+
+        public async Task<ArticleReadModel> GetArticle(string slug)
+        {
+            var article = await _ctxt.Articles
+                .Include(a => a.Tags)
+                .Include(x => x.Comments)
+                .AsNoTracking()
+                .Where(x => x.Slug == slug)
+                .Select(a => new ArticleReadModel
+                {
+                    Slug = a.Slug,
+                    Title = a.Title,
+                    Description = a.Description,
+                    Body = a.Body,
+                    TagList = a.Tags.Select(x => x.Name).ToList(),
+                    CreatedAt = a.CreatedAt,
+                    UpdatedAt = a.UpdatedAt,
+                    author = new UserDto()
+                    {
+                        Email = a.Author.Email,
+                        Username = a.Author.Username
+                    }
+                })
+                .FirstOrDefaultAsync();
+
+            return article;
         }
 
         public async Task<Article> Get(string title) => await _ctxt.Articles.Include(x => x.Tags).FirstOrDefaultAsync(x => x.Title == title);
 
-
+        public Task<List<Article>> GetList(string title)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -7,6 +7,12 @@ namespace Conduit.Features.Articles.Application.Commands
 {
     public class Delete
     {
+        public class ArticleDeleteRequest
+        {
+            public string? title { get; set; }
+            public Tag tag { get; set; }
+        }
+
         private readonly IArticleCommandsRepo _articleCommandsRepo;
         private readonly IArticleQueriesRepo _articleQueriesRepo;
 

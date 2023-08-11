@@ -8,7 +8,6 @@ namespace Conduit.Entities
     {
         [JsonIgnore]
         public Guid ArticleId { get; private set; }
-        //To trzeba żeby z wyszukiwania działało
         public string? Slug { get; private set; }
         public string? Title { get; private set; }
         public string? Description { get; private set; }
@@ -84,3 +83,5 @@ namespace Conduit.Entities
             }
     }
 }
+//interceptor
+//soft delete
