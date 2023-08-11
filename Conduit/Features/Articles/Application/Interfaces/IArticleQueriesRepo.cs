@@ -7,6 +7,6 @@ namespace Conduit.Features.Articles.Application.Interfaces
         public Task<List<ArticleReadModel>> GetAll();
         public Task<Article> Get(string title);
         public Task<ArticleReadModel> GetArticle(string slug);
-        public Task<List<Article>> GetList(string title);
+        public Task<List<ArticleReadModel>> GetList(string title);
     }
 }

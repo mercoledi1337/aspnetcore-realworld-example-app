@@ -56,9 +56,9 @@ namespace Conduit.Features.Articles.WebApp
         }
 
         [HttpGet("articles/{slug}"), Authorize]
-        public async Task<ArticleEnvelope1> GetArticle(string slug)
+        public async Task<List<ArticleReadModel>> GetArticle(string slug)
         {
-            return new ArticleEnvelope1(await _list.GetArticle(slug));
+            return await _articleQueriesRepo.GetList(slug);
         }
 
 
